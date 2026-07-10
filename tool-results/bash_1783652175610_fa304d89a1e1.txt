@@ -1,0 +1,1045 @@
+FOLDER: accessibility-auditor
+  name: accessibility-auditor
+  description: Audit websites for accessibility issues and WCAG compliance. Use when checking accessibility, fixing a11y issues, or ensuring WCAG compliance.
+  tools: 
+  model: 
+
+FOLDER: agent-army
+  name: agent-army
+  description: Deploy a 2-layer parallel agent hierarchy for large, parallelizable work — big refactors, multi-file migrations, codebase-wide audits, bulk generation
+  tools: 
+  model: 
+
+FOLDER: agent-swarm-deployer
+  name: agent-swarm-deployer
+  description: Deploys swarms of sub-agents for massive parallel data processing tasks. Unlike agent-army (which is for code changes), this is for DATA tasks -- proc
+  tools: Read, Write, Bash, Agent, Glob, Grep
+  model: 
+
+FOLDER: agent-team-builder
+  name: agent-team-builder
+  description: Designs and deploys custom agent teams for specific business workflows. Interactive discovery of business processes, then generates complete team conf
+  tools: Read, Write, Bash, Glob
+  model: inherit
+
+FOLDER: agent-to-agent
+  name: agent-to-agent
+  description: Agent-to-Agent (A2A) communication protocol. Connect two or more Claude agents that pass messages, share context, delegate tasks, and collaborate. Imp
+  tools: Read, Write, Agent, Bash, Glob, Grep
+  model: inherit
+
+FOLDER: ai-readiness-assessment
+  name: ai-readiness-assessment
+  description: Assesses how ready a business is for AI adoption across six dimensions. Evaluates data maturity, tech stack, team skills, process documentation, budge
+  tools: Read, Write, Glob, Grep, Bash, WebSearch, WebFetch
+  model: inherit
+
+FOLDER: animate
+  name: animate
+  description: Generate animated videos and motion graphics from natural language descriptions. Creates a standalone Vite + React project with Framer Motion scenes t
+  tools: 
+  model: 
+
+FOLDER: api-documentation-writer
+  name: api-documentation-writer
+  description: Generate comprehensive API documentation including endpoint descriptions, request/response examples, authentication guides, error codes, and SDKs. Cre
+  tools: 
+  model: 
+
+FOLDER: api-endpoint-scaffolder
+  name: api-endpoint-scaffolder
+  description: Generate REST API endpoints with proper structure, validation, error handling, and types. Use when creating new API routes, endpoints, or backend serv
+  tools: 
+  model: 
+
+FOLDER: api-load-tester
+  name: api-load-tester
+  description: Load tests API endpoints with progressive concurrency. Measures response times, error rates, throughput, and identifies breaking points. Generates a d
+  tools: Bash, Read, Write, Glob, Grep
+  model: inherit
+
+FOLDER: athlete-social-media-manager
+  name: athlete-social-media-manager
+  description: Create brand-safe content for athletes. Personal branding strategy, engagement optimization, crisis communication, sponsor integration.
+  tools: 
+  model: 
+
+FOLDER: before-you-build
+  name: before-you-build
+  description: Use before starting a product, feature, MVP, agent, automation, or integration build to identify the main pre-build risk and choose the smallest valid
+  tools: 
+  model: 
+
+FOLDER: board-deck-generator
+  name: board-deck-generator
+  description: Generates professional board meeting presentation content (board-deck.md) with executive summary, financials, product updates, GTM metrics, team/hirin
+  tools: Read, Write, Glob, Grep, Bash
+  model: inherit
+
+FOLDER: bracket-predictor
+  name: bracket-predictor
+  description: March Madness, playoff brackets, tournament picks. Upset potential, chalk vs contrarian strategies, historical trends, confidence levels.
+  tools: 
+  model: 
+
+FOLDER: brand-consistency-checker
+  name: brand-consistency-checker
+  description: Scan documents and slides for off-brand colors, fonts, and logos. Validate against brand guidelines and suggest corrections.
+  tools: 
+  model: 
+
+FOLDER: brand-voice-analyzer
+  name: brand-voice-analyzer
+  description: Analyzes a company's content to extract and codify their brand voice into a comprehensive style guide. Reads website copy, blog posts, emails, and soc
+  tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch, WebSearch
+  model: inherit
+
+FOLDER: budget-optimizer
+  name: budget-optimizer
+  description: Analyze spending patterns and find savings. 50/30/20 rule, subscription audit, debt payoff strategies, emergency fund roadmap.
+  tools: 
+  model: 
+
+FOLDER: champion-identifier
+  name: champion-identifier
+  description: Analyze LinkedIn profiles in target accounts to identify potential internal champions. Evaluates role, career path, mutual connections, interests, and
+  tools: 
+  model: 
+
+FOLDER: churn-autopsy
+  name: churn-autopsy
+  description: Post-mortem analysis when a client churns. Takes client history, engagement data, support tickets, usage logs, and exit feedback to produce a comprehe
+  tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch, WebSearch
+  model: inherit
+
+FOLDER: claude-design-critic
+  name: claude-design-critic
+  description: Audit a website or UI and de-AI it — find the patterns that make it look template-generated (in both design and copy) and return specific, prioritized
+  tools: Read, Write, Bash, Glob, Grep, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: claude-design-system-architect
+  name: claude-design-system-architect
+  description: Generate a complete, premium design system from a brand brief or an existing site — color tokens, type scale, spacing/radius/elevation, motion languag
+  tools: Read, Write, Bash, Glob, Grep, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: claude-landing-composer
+  name: claude-landing-composer
+  description: Compose a premium, animated landing page section by section in Next.js + Tailwind + Motion (Framer Motion) — built on a real design system, with edito
+  tools: Read, Write, Bash, Glob, Grep, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: client-health-dashboard
+  name: client-health-dashboard
+  description: Generates a comprehensive client health overview across all accounts. Reads CRM data, support tickets, usage metrics, billing, and engagement logs. Ca
+  tools: Read, Write, Glob, Grep, Bash, WebFetch, WebSearch, mcp__onewave-crm__list_companies, mcp__onewave-crm__get_company, mcp__onewave-crm__list_contacts, mcp__onewave-crm__get_contact, mcp__onewave-crm__list_deals, mcp__onewave-crm__get_deal, mcp__onewave-crm__get_dashboard, mcp__onewave-crm__get_mrr_breakdown, mcp__onewave-crm__get_pipeline_board, mcp__onewave-crm__get_timeline, mcp__onewave-crm__list_tasks, mcp__onewave-crm__search, mcp__claude_ai_HubSpot__search_crm_objects, mcp__claude_ai_HubSpot__get_crm_objects, mcp__claude_ai_HubSpot__get_properties, mcp__claude_ai_HubSpot__search_owners, mcp__claude_ai_Slack__slack_search_public_and_private, mcp__claude_ai_Gmail__gmail_search_messages, mcp__claude_ai_Gmail__gmail_read_message
+  model: inherit
+
+FOLDER: client-proposal-generator
+  name: client-proposal-generator
+  description: Generates full consulting proposals from a brief. Input client name, problem description, and rough scope. Outputs proposal.md with executive summary,
+  tools: Read, Write, Bash, WebSearch, Glob
+  model: 
+
+FOLDER: code-review-pro
+  name: code-review-pro
+  description: Comprehensive code review covering security vulnerabilities, performance bottlenecks, best practices, and refactoring opportunities. Use when user req
+  tools: 
+  model: 
+
+FOLDER: cold-email-sequence-generator
+  name: cold-email-sequence-generator
+  description: Generate personalized cold email sequences (7-14 emails) with A/B test subject lines, follow-up timing recommendations, and integrated social proof. C
+  tools: 
+  model: 
+
+FOLDER: color-palette-extractor
+  name: color-palette-extractor
+  description: Extract color palettes from images, websites, or designs. Identifies dominant colors, generates complementary schemes, and exports in multiple formats
+  tools: 
+  model: 
+
+FOLDER: company-announcement-writer
+  name: company-announcement-writer
+  description: Executive communication style for all-hands emails. Balances transparency with appropriate messaging.
+  tools: 
+  model: 
+
+FOLDER: competitor-content-analyzer
+  name: competitor-content-analyzer
+  description: Track competitor blog posts, whitepapers, and content strategy. Identify content gaps in your strategy.
+  tools: 
+  model: 
+
+FOLDER: competitor-intel-agent
+  name: competitor-intel-agent
+  description: Monitors competitor websites, pricing, content changes, hiring patterns, and product updates. Generates intelligence reports with strategic implicatio
+  tools: Read, Write, WebSearch, WebFetch, Bash
+  model: inherit
+
+FOLDER: competitor-price-tracker
+  name: competitor-price-tracker
+  description: Monitor competitor pricing pages and send alerts when prices change. Track discount patterns, promotional cycles, and pricing strategy shifts.
+  tools: 
+  model: 
+
+FOLDER: compliance-checker
+  name: compliance-checker
+  description: Audits a codebase or business process for regulatory compliance across GDPR, HIPAA, SOC2, CCPA, and PCI-DSS. Scans for PII handling, data retention, e
+  tools: Read, Glob, Grep, Bash, Write
+  model: inherit
+
+FOLDER: contact-hunter
+  name: contact-hunter
+  description: Search and extract contact information for people or companies including names, phone numbers, emails, job titles, and LinkedIn profiles. Aggregates d
+  tools: 
+  model: 
+
+FOLDER: content-repurposer
+  name: 
+  description: 
+  tools: 
+  model: 
+
+FOLDER: contract-analyzer
+  name: contract-analyzer
+  description: Review contracts for concerning clauses, extract key terms, compare to standard terms, and flag unusual provisions. Use when user needs contract revie
+  tools: 
+  model: 
+
+FOLDER: contract-redliner
+  name: contract-redliner
+  description: Reads a contract and generates redline suggestions with replacement language. Identifies unfavorable terms, missing protections, ambiguous language, l
+  tools: Read, Write, Glob, Grep, Bash
+  model: inherit
+
+FOLDER: conversation-archaeologist
+  name: conversation-archaeologist
+  description: Mine ALL past Claude conversations to build a living 'User Manual About You'. Extract writing style, business context, goals, preferences, and pattern
+  tools: 
+  model: 
+
+FOLDER: cowork-deal-room
+  name: cowork-deal-room
+  description: Uses Cowork-style multi-step analysis to process deal room documents -- contracts, financials, org charts. Outputs risk assessment, term comparison, k
+  tools: Read, Glob, Grep, Write, Bash, WebSearch
+  model: inherit
+
+FOLDER: cross-conversation-project-manager
+  name: cross-conversation-project-manager
+  description: Maintain project state across MULTIPLE conversations over days/weeks. Track tasks, decisions, blockers, resources. Auto-update when project mentioned.
+  tools: 
+  model: 
+
+FOLDER: css-animation-creator
+  name: css-animation-creator
+  description: Create professional CSS animations, transitions, micro-interactions, and complex motion design. Use when adding animations, hover effects, loading sta
+  tools: 
+  model: 
+
+FOLDER: csv-excel-merger
+  name: csv-excel-merger
+  description: Merge multiple CSV/Excel files with intelligent column matching, data deduplication, and conflict resolution. Handles different schemas, formats, and 
+  tools: 
+  model: 
+
+FOLDER: customer-journey-mapper
+  name: customer-journey-mapper
+  description: Maps the full customer journey from first touch to advocacy. Generates a comprehensive customer-journey.md with all stages, touchpoints, emotions, pai
+  tools: Read, Write, Edit, Glob, Grep, Bash, WebSearch, WebFetch
+  model: inherit
+
+FOLDER: customer-panel-of-experts
+  name: customer-panel-of-experts
+  description: Build a panel of your real buyer personas (from a deep scan of any tools you allow it to connect to) and have them debate any decision you bring — a m
+  tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: customer-review-aggregator
+  name: customer-review-aggregator
+  description: Aggregate and analyze customer reviews from G2, Capterra, Trustpilot, App Store, and other platforms. Performs sentiment analysis, identifies pain poi
+  tools: 
+  model: 
+
+FOLDER: data-pipeline-builder
+  name: data-pipeline-builder
+  description: Designs and builds ETL/ELT data pipelines. Takes data sources, destination, transformation requirements. Generates pipeline code (Python/SQL), schedul
+  tools: Read, Write, Edit, Glob, Grep, Bash
+  model: inherit
+
+FOLDER: database-migrator
+  name: database-migrator
+  description: Migrates databases between providers (Postgres, MySQL, Supabase, PlanetScale, MongoDB). Reads source schema, generates migration scripts, handles data
+  tools: Read, Write, Bash, Glob, Grep, Agent
+  model: 
+
+FOLDER: database-schema-designer
+  name: database-schema-designer
+  description: Design optimized database schemas for SQL and NoSQL databases including tables, relationships, indexes, and constraints. Creates ERD diagrams, migrati
+  tools: 
+  model: 
+
+FOLDER: deal-closer-playbook
+  name: deal-closer-playbook
+  description: Analyzes a deal in progress and generates a comprehensive closing strategy. Researches the target company, maps the buying committee, builds objection
+  tools: Read, Write, WebSearch, Bash
+  model: inherit
+
+FOLDER: deal-momentum-analyzer
+  name: deal-momentum-analyzer
+  description: Score deal velocity based on email response times, meeting frequency, and stakeholder engagement. Predict which deals will close vs stall.
+  tools: 
+  model: 
+
+FOLDER: deal-review-framework
+  name: deal-review-framework
+  description: Structured deal assessment using MEDDIC, BANT. Risk scoring, required evidence by stage, red flag detection, coaching points.
+  tools: 
+  model: 
+
+FOLDER: debate-simulator
+  name: 
+  description: 
+  tools: 
+  model: 
+
+FOLDER: dependency-auditor
+  name: dependency-auditor
+  description: Audit npm dependencies for security vulnerabilities, outdated packages, and unused dependencies. Use when checking for security issues, updating packa
+  tools: 
+  model: 
+
+FOLDER: design-system-generator
+  name: design-system-generator
+  description: Create design systems with tokens, components, and documentation. Use when building design systems, creating component libraries, or establishing desi
+  tools: 
+  model: 
+
+FOLDER: docker-debugger
+  name: docker-debugger
+  description: Debug Docker containers, fix Dockerfile issues, optimize images, and troubleshoot docker-compose. Use when having Docker problems, container issues, o
+  tools: 
+  model: 
+
+FOLDER: email-subject-line-optimizer
+  name: email-subject-line-optimizer
+  description: A/B test subject line variations using proven copywriting frameworks. Predict open rates based on historical performance.
+  tools: 
+  model: 
+
+FOLDER: email-template-generator
+  name: email-template-generator
+  description: Generate professional email templates for various business scenarios including sales outreach, customer support, internal communications, follow-ups, 
+  tools: 
+  model: 
+
+FOLDER: env-setup-wizard
+  name: env-setup-wizard
+  description: Set up environment variables, .env files, and configuration management. Use when configuring environment variables, creating .env files, or managing a
+  tools: 
+  model: 
+
+FOLDER: error-boundary-creator
+  name: error-boundary-creator
+  description: Create error boundaries, error handling, and fallback UIs for React applications. Use when implementing error handling, creating fallback components, 
+  tools: 
+  model: 
+
+FOLDER: executive-dashboard-generator
+  name: executive-dashboard-generator
+  description: Transform raw data from CSVs, Google Sheets, or databases into executive-ready reports with visualizations, key metrics, trend analysis, and actionabl
+  tools: 
+  model: 
+
+FOLDER: expansion-revenue-finder
+  name: expansion-revenue-finder
+  description: Identifies upsell and cross-sell opportunities within existing customer accounts. Analyzes product usage, feature gaps, team growth, industry benchmar
+  tools: Read, Write, Bash, Grep, Glob
+  model: inherit
+
+FOLDER: expert-panel
+  name: expert-panel
+  description: Assemble 2-3 complementary experts to collaboratively analyze anything. Experts work together to explore topics from multiple expert angles.
+  tools: 
+  model: 
+
+FOLDER: fantasy-lineup-optimizer
+  name: fantasy-lineup-optimizer
+  description: Analyze matchups, injuries, weather, Vegas lines. Recommend sit/start decisions with confidence levels for NFL, NBA, MLB, NHL, soccer.
+  tools: 
+  model: 
+
+FOLDER: financial-goal-planner
+  name: financial-goal-planner
+  description: Create timelines for house down payment, retirement, college fund. Monthly savings targets, investment strategies, milestone tracking.
+  tools: 
+  model: 
+
+FOLDER: financial-parser
+  name: financial-document-parser
+  description: Extract and analyze data from invoices, receipts, bank statements, and financial documents. Categorize expenses, track recurring charges, and generate
+  tools: 
+  model: 
+
+FOLDER: flashcard-generator
+  name: 
+  description: 
+  tools: 
+  model: 
+
+FOLDER: font-pairing-suggester
+  name: font-pairing-suggester
+  description: Recommend font combinations for different use cases. Provide Google Fonts alternatives to premium fonts with hierarchy examples.
+  tools: 
+  model: 
+
+FOLDER: full-codebase-migrator
+  name: full-codebase-migrator
+  description: Uses 1M context window to ingest an entire codebase and output a file-by-file migration plan. Supports JS to TS, React class to hooks, framework migra
+  tools: Read, Glob, Grep, Write, Bash, Agent
+  model: 
+
+FOLDER: game-builder
+  name: 
+  description: 
+  tools: 
+  model: 
+
+FOLDER: game-recap-generator
+  name: 
+  description: 
+  tools: 
+  model: 
+
+FOLDER: game-strategy-simulator
+  name: game-strategy-simulator
+  description: What-if scenario analyzer for sports. Play-calling recommendations, clock management, substitution patterns, risk/reward calculations.
+  tools: 
+  model: 
+
+FOLDER: git-pr-reviewer
+  name: git-pr-reviewer
+  description: Review pull requests for code quality, security issues, and best practices. Use when reviewing PRs, checking code changes, or analyzing diffs before m
+  tools: 
+  model: 
+
+FOLDER: gmail-to-crm-pipeline
+  name: gmail-to-crm-pipeline
+  description: Uses MCP Connectors to read Gmail inbound leads, score them by ICP fit, draft personalized responses, and log qualified leads to your CRM. Turns your 
+  tools: Read, Write, Bash, Grep, WebSearch
+  model: inherit
+
+FOLDER: highlight-reel-scripter
+  name: highlight-reel-scripter
+  description: Create shot lists for highlight videos. Timestamp key plays, music cue suggestions, pacing. Platform-specific cuts for TikTok, YouTube.
+  tools: 
+  model: 
+
+FOLDER: hiring-scorecard
+  name: hiring-scorecard
+  description: Creates structured hiring scorecards for any role. Takes job title, requirements, and team context. Generates comprehensive scorecard with weighted sc
+  tools: Read, Write, Glob, Grep
+  model: inherit
+
+FOLDER: hyperframes-ad-director
+  name: hyperframes-ad-director
+  description: Turn a marketing brief or product offer into a finished short-form video ad built in HyperFrames — hook, script, shot-by-shot storyboard, scene-by-sce
+  tools: Read, Write, Bash, Glob, Grep, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: hyperframes-sales-demo-builder
+  name: hyperframes-sales-demo-builder
+  description: Build a personalized product-demo or sales-walkthrough video in HyperFrames for a specific prospect or account — narrated screen-by-screen, branded to
+  tools: Read, Write, Bash, Glob, Grep, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: hypothesis-testing-engine
+  name: 
+  description: 
+  tools: 
+  model: 
+
+FOLDER: icp-deep-scanner
+  name: icp-deep-scanner
+  description: Deep-scan any tools you connect (CRM, email, support, reviews, analytics, billing, database) to produce a data-grounded Ideal Customer Profile and a r
+  tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: inbound-lead-qualifier
+  name: inbound-lead-qualifier
+  description: Analyze inbound leads (form fills, demo requests) and score based on ICP fit, intent, and urgency. Auto-generates qualification questions, routes to r
+  tools: 
+  model: 
+
+FOLDER: incident-responder
+  name: incident-responder
+  description: Production incident response automation. Reads logs, checks recent deploys, identifies root cause, suggests fixes, drafts incident comms, creates post
+  tools: Read, Glob, Grep, Bash, Write, Edit, WebFetch, WebSearch
+  model: inherit
+
+FOLDER: injury-report-tracker
+  name: injury-report-tracker
+  description: Monitor injury news across leagues. Fantasy impact analysis, backup player analysis, return timeline estimates.
+  tools: 
+  model: 
+
+FOLDER: intent-signal-aggregator
+  name: intent-signal-aggregator
+  description: Monitor buyer intent signals across the web including job postings, tech changes, funding rounds, and leadership changes. Alerts when prospects show b
+  tools: 
+  model: 
+
+FOLDER: internal-email-composer
+  name: internal-email-composer
+  description: Casual but professional tone for team communication. Uses company-specific terminology with scannable format.
+  tools: 
+  model: 
+
+FOLDER: investor-update-writer
+  name: investor-update-writer
+  description: Generates monthly/quarterly investor updates. Takes KPIs, milestones, challenges, financials. Writes professional investor-update.md with highlights, 
+  tools: Read, Glob, Grep, Write, Edit
+  model: inherit
+
+FOLDER: itinerary-optimizer
+  name: itinerary-optimizer
+  description: Efficiently route multi-stop trips with time management. Include transportation, restaurant/activity reservations timeline, and buffer time for sponta
+  tools: 
+  model: 
+
+FOLDER: job-application-optimizer
+  name: job-application-optimizer
+  description: Optimize job applications by tailoring resumes to job postings, generating customized cover letters, and preparing role-specific interview questions. 
+  tools: 
+  model: 
+
+FOLDER: knowledge-base-builder
+  name: knowledge-base-builder
+  description: FAQ identification from support tickets, step-by-step tutorial creation, screenshot/video script guidance, search optimization, and self-service defle
+  tools: 
+  model: 
+
+FOLDER: landing-page-copywriter
+  name: landing-page-copywriter
+  description: Write high-converting landing page copy using proven frameworks like PAS (Problem-Agitate-Solution), AIDA, and StoryBrand. Creates headlines, value pr
+  tools: 
+  model: 
+
+FOLDER: landing-page-optimizer
+  name: landing-page-optimizer
+  description: Optimize landing pages for conversions, performance, and SEO. Use when improving landing pages, increasing conversions, or optimizing page performance
+  tools: 
+  model: 
+
+FOLDER: lead-scoring-model
+  name: lead-scoring-model
+  description: Builds a custom lead scoring model for a business. Takes ICP definition, historical win/loss data, CRM export. Analyzes which attributes correlate wit
+  tools: Read, Write, Glob, Grep, Bash, WebSearch, WebFetch
+  model: 
+
+FOLDER: linkedin-post-optimizer
+  name: linkedin-post-optimizer
+  description: Professional narrative style with line breaks, hashtag strategy, and hooks in first 2 lines to avoid truncation
+  tools: 
+  model: 
+
+FOLDER: linkedin-sales-navigator-alt
+  name: linkedin-sales-navigator-alt
+  description: Build targeted prospect lists by analyzing LinkedIn profiles, extracting job titles, companies, locations, and recent activity. Identifies decision-ma
+  tools: 
+  model: 
+
+FOLDER: lookalike-customer-finder
+  name: lookalike-customer-finder
+  description: Input your best customers and find 100+ companies that match the profile. Uses firmographic data, tech stack, growth signals, and similarity scoring t
+  tools: 
+  model: 
+
+FOLDER: market-sizing
+  name: market-sizing
+  description: TAM/SAM/SOM calculator with deep market research. Produces comprehensive market-sizing.md with top-down and bottom-up estimates, methodology, data sou
+  tools: Read, Write, Edit, Glob, Grep, Bash, WebSearch, WebFetch
+  model: inherit
+
+FOLDER: meeting-intelligence
+  name: meeting-intelligence-system
+  description: Analyze meeting transcripts to extract decisions, action items, blockers, sentiment, and generate follow-up emails. Use when user provides meeting not
+  tools: 
+  model: 
+
+FOLDER: meeting-to-tasks
+  name: meeting-to-tasks
+  description: Takes meeting transcripts, extracts action items with owners and deadlines, detects implicit commitments, generates structured meeting summaries, and 
+  tools: Read, Write, Bash, Grep
+  model: inherit
+
+FOLDER: multi-agent-client-onboarding
+  name: multi-agent-client-onboarding
+  description: Uses Agent SDK to deploy 3 parallel agents for client onboarding -- workflow auditor, tech stack mapper, and strategy drafter. Real consulting workflo
+  tools: Read, Grep, Glob, Bash, Agent, Write, WebSearch
+  model: inherit
+
+FOLDER: mvp-case-builder
+  name: mvp-case-builder
+  description: Construct statistical arguments for MVP/awards. Narrative framing, comparison to past winners, advanced metrics, counter-arguments.
+  tools: 
+  model: 
+
+FOLDER: objection-pattern-detector
+  name: objection-pattern-detector
+  description: Mine lost deal notes to identify recurring objection patterns. Create objection response playbooks from won deals.
+  tools: 
+  model: 
+
+FOLDER: okr-generator
+  name: okr-generator
+  description: Generates structured OKR plans (Objectives and Key Results) for teams and companies following Google/Intel methodology. Takes company goals, team func
+  tools: Read, Write, Glob, Grep
+  model: inherit
+
+FOLDER: onboarding-checklist
+  name: onboarding-checklist
+  description: Generates customized client onboarding checklists with phased tasks, ownership assignments, dependencies, acceptance criteria, and email templates. Ad
+  tools: Read, Write, Glob, Grep
+  model: inherit
+
+FOLDER: overnight-repo-auditor
+  name: overnight-repo-auditor
+  description: Uses Managed Agents' 14.5-hour runtime to audit an entire codebase overnight. Security, performance, accessibility, dependency issues. You wake up to 
+  tools: Read, Grep, Glob, Bash, Agent, Write
+  model: inherit
+
+FOLDER: performance-profiler
+  name: performance-profiler
+  description: Profile and optimize application performance including load times, memory usage, and rendering. Use when debugging slow performance, memory leaks, or 
+  tools: 
+  model: 
+
+FOLDER: personalization-at-scale
+  name: personalization-at-scale
+  description: Generate unique personalized first lines for hundreds of prospects using company news, LinkedIn activity, and mutual connections. Saves 10+ hours of m
+  tools: 
+  model: 
+
+FOLDER: pipeline-health-analyzer
+  name: pipeline-health-analyzer
+  description: Analyze pipeline health, identify stalled deals, predict close probability, and suggest actions to move deals forward. Improves forecast accuracy and 
+  tools: 
+  model: 
+
+FOLDER: pitch-deck-reviewer
+  name: pitch-deck-reviewer
+  description: Reviews pitch decks and investor presentations. Reads slide content, evaluates narrative flow, problem/solution clarity, market sizing, competitive po
+  tools: Read, Glob, Grep, Bash, Write, Edit, WebSearch, WebFetch
+  model: inherit
+
+FOLDER: play-by-play-generator
+  name: 
+  description: 
+  tools: 
+  model: 
+
+FOLDER: player-comparison-tool
+  name: player-comparison-tool
+  description: Side-by-side stat comparisons with context. Adjust for era, pace of play, league differences. Advanced metrics explained in plain English.
+  tools: 
+  model: 
+
+FOLDER: podcast-content-suite
+  name: podcast-to-content-suite
+  description: Transform podcast transcripts into comprehensive content marketing suites including blog posts, social media content, newsletters, SEO-optimized artic
+  tools: 
+  model: 
+
+FOLDER: podcast-studio
+  name: podcast-studio
+  description: Generate podcast scripts from text content. Use Tone.js and Howler.js for audio mixing. Create intro/outro music, transitions, sound effects.
+  tools: 
+  model: 
+
+FOLDER: portfolio-analyzer
+  name: portfolio-analyzer
+  description: Review investment portfolios for risk, diversification, fees. Asset allocation recommendations, tax-loss harvesting, rebalancing.
+  tools: 
+  model: 
+
+FOLDER: post-game-press-conference-simulator
+  name: post-game-press-conference-simulator
+  description: Generate realistic coach/player interview responses for wins, losses, controversies, injuries. Authentic coachspeak and player personalities.
+  tools: 
+  model: 
+
+FOLDER: practice-plan-creator
+  name: practice-plan-creator
+  description: Design sport-specific practice sessions. Drills by skill level and time, warm-up, skill work, scrimmage, cool-down.
+  tools: 
+  model: 
+
+FOLDER: presentation-design-enhancer
+  name: presentation-design-enhancer
+  description: Transform text-heavy slides into visual storytelling. Suggest layout improvements, icon usage, and data visualization.
+  tools: 
+  model: 
+
+FOLDER: pricing-change-strategist
+  name: pricing-change-strategist
+  description: Design and roll out a price increase or packaging change without triggering churn. Segments the base by price sensitivity, models revenue and churn sc
+  tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: pricing-strategy
+  name: pricing-strategy
+  description: Designs pricing strategies for products and services. Takes product/service, costs, target market, competitors. Analyzes cost-plus, value-based, compe
+  tools: Read, Glob, Grep, WebFetch, WebSearch
+  model: inherit
+
+FOLDER: product-launch-war-room
+  name: product-launch-war-room
+  description: Run a go-to-market war room for a launch, repositioning, price change, or new product. Convenes opposing expert and customer-persona viewpoints to deb
+  tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: prospect-panel-simulator
+  name: prospect-panel-simulator
+  description: Simulate a panel of your real prospects and buyers to pressure-test sales and marketing before it goes out — cold emails, pitch decks, landing pages, 
+  tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch, Agent
+  model: inherit
+
+FOLDER: prospect-research-compiler
+  name: prospect-research-compiler
+  description: Aggregate prospect intelligence from multiple sources including news, social media, company websites, and financial data.
+  tools: 
+  model: 
+
+FOLDER: quiz-maker
+  name: quiz-maker
+  description: Create multiple choice, true/false, fill-in-blank, matching quizzes. Auto-generate plausible distractors. Instant grading with explanations.
+  tools: 
+  model: 
+
+FOLDER: quota-setting-calculator
+  name: quota-setting-calculator
+  description: Top-down vs bottom-up quota models. Historical attainment, market growth assumptions, ramp periods, territory complexity.
+  tools: 
+  model: 
+
+FOLDER: raise-negotiation-prep
+  name: raise-negotiation-prep
+  description: Market salary research, accomplishment quantification, negotiation scripts, total compensation analysis, timing strategy.
+  tools: 
+  model: 
+
+FOLDER: ramping-rep-tracker
+  name: ramping-rep-tracker
+  description: 30/60/90/120 day ramp milestones. Activity expectations by week, certification progress, early warning indicators.
+  tools: 
+  model: 
+
+FOLDER: react-component-generator
+  name: react-component-generator
+  description: Generate React components with TypeScript, proper props, hooks, and accessibility. Use when creating new React components, UI elements, or refactoring
+  tools: 
+  model: 
+
+FOLDER: reddit-analyzer
+  name: reddit-thread-analyzer
+  description: Analyze Reddit threads for sentiment, consensus opinions, top arguments, and discussion patterns. Use this when users want to understand Reddit commun
+  tools: 
+  model: 
+
+FOLDER: regex-debugger
+  name: regex-visual-debugger
+  description: Debug regex patterns with visual breakdowns, plain English explanations, test case generation, and flavor conversion. Use when user needs help with re
+  tools: 
+  model: 
+
+FOLDER: renewal-predictor
+  name: renewal-predictor
+  description: Predicts client renewal likelihood based on health score signals. Analyzes engagement, support, adoption, satisfaction, billing, stakeholder, and usag
+  tools: Read, Write, Bash, Grep, Glob
+  model: inherit
+
+FOLDER: rep-performance-scorecard
+  name: 
+  description: 
+  tools: 
+  model: 
+
+FOLDER: responsive-layout-builder
+  name: responsive-layout-builder
+  description: Build responsive layouts with CSS Grid, Flexbox, and container queries. Use when creating responsive designs, fixing layout issues, or building mobile
+  tools: 
+  model: 
+
+FOLDER: roi-calculator
+  name: roi-calculator
+  description: Calculate comprehensive ROI for AI implementation projects. Takes current costs, manual process time, team size, and hourly rates. Generates detailed 
+  tools: Read, Write, Edit, Bash, Glob, Grep
+  model: inherit
+
+FOLDER: runbook-generator
+  name: runbook-generator
+  description: Generates comprehensive operational runbooks for any system or process. Reads codebase, infrastructure config, and deployment scripts to produce struc
+  tools: Read, Glob, Grep, Bash, Write, Edit
+  model: inherit
+
+FOLDER: saas-replacement-planner
+  name: saas-replacement-planner
+  description: Evaluates which SaaS tools can be replaced with AI agents. Takes a list of current SaaS subscriptions with costs, assesses replacement feasibility, es
+  tools: Read, Write, Edit, Glob, Grep, Bash, WebSearch, WebFetch
+  model: inherit
+
+FOLDER: sales-call-prep-assistant
+  name: sales-call-prep-assistant
+  description: Generate pre-call research briefs with company news, stakeholder backgrounds, and custom discovery question sets.
+  tools: 
+  model: 
+
+FOLDER: sales-coaching-plan-generator
+  name: sales-coaching-plan-generator
+  description: Individualized development plans by weakness. Skill assessments, call reviews, ride-along checklists, certification tracking.
+  tools: 
+  model: 
+
+FOLDER: sales-comp-plan-designer
+  name: sales-comp-plan-designer
+  description: Base/variable split recommendations, accelerators, decelerators, quota retirement methods, SPIFs, cost of sales tracking.
+  tools: 
+  model: 
+
+FOLDER: sales-forecast-builder
+  name: sales-forecast-builder
+  description: Weighted pipeline forecast by probability. Historical accuracy tracking, commit vs best-case scenarios, deal slippage patterns.
+  tools: 
+  model: 
+
+FOLDER: sales-methodology-implementer
+  name: sales-methodology-implementer
+  description: Implement proven sales methodologies (MEDDIC, BANT, Sandler, Challenger, SPIN) across your team. Generate framework-specific questions, score deals, t
+  tools: 
+  model: 
+
+FOLDER: scout
+  name: scout
+  description: Analyzes current conversation context to recommend the best skills and subagents for the task at hand. Use proactively when unsure which tool, skill, 
+  tools: Read, Glob, Grep, WebFetch, WebSearch
+  model: inherit
+
+FOLDER: scout-pro
+  name: scout-pro
+  description: Enhanced skill navigator that maps conversation history, recommends multi-skill chains, identifies patterns from past usage, and learns from session o
+  tools: Read, Glob, Grep, WebFetch, WebSearch
+  model: inherit
+
+FOLDER: scouting-report-builder
+  name: scouting-report-builder
+  description: Generate player and team scouting reports. Strengths, weaknesses, tendencies, film breakdown, matchup advantages.
+  tools: 
+  model: 
+
+FOLDER: screenshot-to-code
+  name: screenshot-to-code
+  description: Convert UI screenshots into working HTML/CSS/React/Vue code. Detects design patterns, components, and generates responsive layouts. Use this when user
+  tools: 
+  model: 
+
+FOLDER: security-pentest-planner
+  name: security-pentest-planner
+  description: Plans security penetration tests for web applications. Analyzes codebase, API routes, auth implementation, and infrastructure config to generate compr
+  tools: Read, Glob, Grep, Bash
+  model: inherit
+
+FOLDER: seo-keyword-cluster-builder
+  name: seo-keyword-cluster-builder
+  description: Group related keywords into topic clusters. Create content hub architecture recommendations and internal linking strategies.
+  tools: 
+  model: 
+
+FOLDER: seo-optimizer
+  name: seo-content-optimizer
+  description: Optimize content for search engines with keyword analysis, readability scoring, meta descriptions, and competitor comparison. Use this when users want
+  tools: 
+  model: 
+
+FOLDER: skill-composer-studio
+  name: skill-composer-studio
+  description: CHAIN multiple existing skills into custom multi-step workflows. Programmable skill combinations with automatic handoffs. Create composite skills from
+  tools: 
+  model: 
+
+FOLDER: skill-navigator
+  name: skill-navigator
+  description: The 100th skill! Your intelligent guide to all 99 other skills. Recommends the perfect skill for any task, creates skill combinations, and helps you d
+  tools: 
+  model: 
+
+FOLDER: slack-message-formatter
+  name: slack-message-formatter
+  description: Convert long text into Slack-optimized format with emojis, bullets, code blocks, and threading suggestions
+  tools: 
+  model: 
+
+FOLDER: sms-text-optimizer
+  name: sms-text-optimizer
+  description: Condense messages to 160 characters without losing meaning. Remove unnecessary words while keeping tone.
+  tools: 
+  model: 
+
+FOLDER: social-repurposer
+  name: social-media-content-repurposer
+  description: Convert content between platforms (blog to Twitter thread, article to LinkedIn post, etc.). Optimize for each platform's format, tone, and best practi
+  tools: 
+  model: 
+
+FOLDER: social-selling-content-generator
+  name: social-selling-content-generator
+  description: Generate 30+ LinkedIn posts that attract your target prospects. Creates industry insights, thought leadership, engagement prompts, and comment strateg
+  tools: 
+  model: 
+
+FOLDER: sow-generator
+  name: sow-generator
+  description: Generates professional Statements of Work from a project brief. Use when a user needs to create an SOW, scope a project, define deliverables and miles
+  tools: Read, Write, Bash, WebSearch
+  model: inherit
+
+FOLDER: sports-betting-analyzer
+  name: sports-betting-analyzer
+  description: Analyze spreads, over/unders, prop bets. Historical trends, situational stats, value bet identification. For entertainment/education only.
+  tools: 
+  model: 
+
+FOLDER: sports-meme-creator
+  name: sports-meme-creator
+  description: Generate sport-specific memes from games/moments. Current event reactive content, popular templates, team/player inside jokes.
+  tools: 
+  model: 
+
+FOLDER: sports-podcast-outline-generator
+  name: sports-podcast-outline-generator
+  description: Create structured podcast episodes. Segment timing, debate points, hot takes, listener questions, ad break placement.
+  tools: 
+  model: 
+
+FOLDER: sports-trivia-builder
+  name: sports-trivia-builder
+  description: Generate sports trivia questions by sport/era/difficulty. Multiple formats with obscure stats, fun facts, pub quiz ready content.
+  tools: 
+  model: 
+
+FOLDER: stock-photo-finder
+  name: stock-photo-finder
+  description: Search multiple free stock photo sites simultaneously. Filter by license type, orientation, and color scheme.
+  tools: 
+  model: 
+
+FOLDER: sub-agent-orchestrator
+  name: sub-agent-orchestrator
+  description: Manages parent/child agent relationships with task delegation and result aggregation. Supports sequential chains, parallel fans, conditional routing, 
+  tools: Read, Write, Agent, Bash
+  model: 
+
+FOLDER: tax-strategy-optimizer
+  name: tax-strategy-optimizer
+  description: Pre-tax vs Roth analysis, charitable giving optimization, capital gains timing, deduction maximization. Not a substitute for CPA.
+  tools: 
+  model: 
+
+FOLDER: team-chemistry-evaluator
+  name: team-chemistry-evaluator
+  description: Analyze roster fit and personality dynamics. Leadership assessment, role clarity, locker room culture, trade/signing impact.
+  tools: 
+  model: 
+
+FOLDER: tech-due-diligence
+  name: tech-due-diligence
+  description: Technical due diligence for M&A, investment, or acquisition. Reads a target company's codebase and generates a comprehensive tech DD report with archi
+  tools: Read, Glob, Grep, Bash
+  model: inherit
+
+FOLDER: technical-writer
+  name: technical-writer
+  description: Write comprehensive technical documentation including user guides, how-to articles, system architecture docs, onboarding materials, and knowledge base
+  tools: 
+  model: 
+
+FOLDER: territory-planning-optimizer
+  name: territory-planning-optimizer
+  description: Account assignment by revenue potential, geography, relationship. Workload balancing, TAM/SAM calculation, coverage models.
+  tools: 
+  model: 
+
+FOLDER: test-coverage-improver
+  name: test-coverage-improver
+  description: Analyze test coverage gaps and generate tests to improve coverage. Use when improving test coverage, finding untested code, or writing missing tests.
+  tools: 
+  model: 
+
+FOLDER: training-log-analyzer
+  name: training-log-analyzer
+  description: Track workouts, stats, progress over time. Identify improvement areas, plateaus, rest/recovery needs, peak performance timing, injury risk.
+  tools: 
+  model: 
+
+FOLDER: trash-talk-generator
+  name: trash-talk-generator
+  description: Create clever, non-offensive trash talk. Rivalry-specific references, historical callbacks, memes. Fun, not mean.
+  tools: 
+  model: 
+
+FOLDER: tweetclaw-x-twitter-automation
+  name: tweetclaw-x-twitter-automation
+  description: Use TweetClaw with OpenClaw to search tweets, search tweet replies, export followers, inspect users, monitor X/Twitter, and prepare reviewed post or r
+  tools: 
+  model: 
+
+FOLDER: utm-link-generator
+  name: utm-link-generator
+  description: Generates properly tagged UTM links with consistent naming conventions. Maintains a UTM registry file (utm-registry.json) to enforce naming consistenc
+  tools: Read, Write, Bash
+  model: 
+
+FOLDER: utm-parameter-generator
+  name: utm-parameter-generator
+  description: Create standardized UTM tracking for all campaigns. Ensure consistent naming conventions across team and generate tracking reports.
+  tools: 
+  model: 
+
+FOLDER: weak-signal-synthesizer
+  name: weak-signal-synthesizer
+  description: Identify EMERGING trends by connecting dots across unrelated sources. Monitor niche communities, academic research, GitHub, patents, funding, regulato
+  tools: 
+  model: 
+
+FOLDER: webinar-content-repurposer
+  name: webinar-content-repurposer
+  description: Transform webinar recordings into multiple content assets including blog post series, social media snippets, infographic ideas, email sequences, and s
+  tools: 
+  model: 
+
+FOLDER: webinar-to-content-multiplier
+  name: webinar-to-content-multiplier
+  description: Convert webinar recordings into blog posts, social snippets, email series. Extract key quotes, statistics, and soundbites.
+  tools: 
+  model: 
+
+FOLDER: weekly-business-report
+  name: weekly-business-report
+  description: Auto-generates weekly KPI reports from multiple data sources including Supabase analytics, CRM data, financial spreadsheets, and email metrics. Produc
+  tools: Read, Write, Bash, Glob, Grep, WebSearch
+  model: inherit
+
+FOLDER: workflow-automator
+  name: workflow-automator
+  description: Takes a manual business workflow description and designs the automated version. Maps current steps, handoffs, decision points, and bottlenecks. Design
+  tools: Read, Write, Glob, Grep, Bash, WebSearch, WebFetch
+  model: inherit
+
+FOLDER: workout-program-designer
+  name: workout-program-designer
+  description: Custom training plans by goal (strength, cardio, flexibility). Progressive overload programming, rest day optimization, home vs gym adaptations, deloa
+  tools: 
+  model: 
+
+TOTAL SKILLS: 174

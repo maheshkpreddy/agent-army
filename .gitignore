@@ -50,5 +50,24 @@ test
 prompt
 
 server.log
+
+# Internal scripts and state
+.zscripts/
+tool-results/
+
+# Database
+db/
+
+# Reference repos (not needed for deployment)
+ref-claude-skills/
+ref-repo/
+
+# Download dir (generated files)
+download/
+
 # Skills directory
 /skills/
+
+# Workflow files
+.workflow-*.js
+.army-state.md

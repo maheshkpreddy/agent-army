@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { signIn } from 'next-auth/react';
 
 const ROLE_PREVIEW = [
   { role: 'admin', label: 'Administrator', desc: 'Full access to all agents + user management', color: '#EF4444', icon: '👑' },
@@ -57,25 +58,19 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/auth/callback/credentials', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          email,
-          password,
-          callbackUrl: '/',
-          json: 'true',
-        }),
+      const result = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
+        callbackUrl: '/',
       });
 
-      const data = await res.json();
-
-      if (data.error) {
+      if (result?.error) {
         setError('Invalid email or password. Please try again.');
-        toast.error('Login failed', { description: 'Invalid credentials' });
-      } else if (data.url) {
+        toast.error('Login failed', { description: result.error });
+      } else if (result?.ok) {
         toast.success('Welcome to MARQ AI Agent TRIBE!');
-        window.location.href = data.url || '/';
+        window.location.href = result.url || '/';
       }
     } catch (err) {
       setError('An error occurred. Please try again.');

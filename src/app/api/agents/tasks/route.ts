@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isVercel, memoryStore } from '@/lib/memory-store';
 import { getZAIConfigFromEnv } from '@/lib/zai-init';
+import { generateContextualResponse } from '@/lib/agent-responses';
 
 let db: any = null;
 try {
@@ -118,18 +119,6 @@ Format all code and config with proper language tags.`,
 Be thorough and customer-focused in all documentation.`,
 };
 
-// Fallback task responses if LLM fails
-const FALLBACK_TASK_RESPONSES: Record<string, string> = {
-  'development': 'Task completed with code implementation. Full source code, configuration, and deployment instructions have been generated. See the detailed output above.',
-  'testing': 'Task completed with comprehensive test suite. Unit, integration, and edge case tests have been created with configuration files.',
-  'business-analysis': 'Task completed with detailed requirements documentation. User stories, acceptance criteria, and process maps have been delivered.',
-  'sales': 'Task completed with sales strategy and materials. Outreach templates, proposal frameworks, and pipeline analysis have been generated.',
-  'implementation': 'Task completed with implementation plan and deployment artifacts. Infrastructure code, CI/CD configs, and runbooks have been created.',
-  'data-analysis': 'Task completed with full analysis. Statistical findings, visualizations, and recommendations have been documented.',
-  'system-admin': 'Task completed with infrastructure configuration. Automation scripts, monitoring setup, and security hardening recommendations have been provided.',
-  'support': 'Task completed with resolution documentation. Step-by-step guide, knowledge base article, and prevention recommendations have been created.',
-};
-
 async function generateTaskResult(agentType: string, taskTitle: string, taskDescription: string): Promise<string> {
   try {
     const zai = await getZAI();
@@ -154,8 +143,11 @@ async function generateTaskResult(agentType: string, taskTitle: string, taskDesc
     }
     return result;
   } catch (error: any) {
-    console.error('Task LLM call failed:', error?.message);
-    return FALLBACK_TASK_RESPONSES[agentType] || `Task "${taskTitle}" completed successfully.`;
+    console.error('Task LLM call failed, using contextual fallback:', error?.message);
+    return generateContextualResponse(
+      { id: '', type: agentType, name: '', systemPrompt: '', capabilities: '' },
+      taskTitle + ': ' + taskDescription
+    );
   }
 }
 

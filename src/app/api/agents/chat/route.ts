@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isVercel, memoryStore } from '@/lib/memory-store';
 import { getZAIConfigFromEnv } from '@/lib/zai-init';
+import { generateContextualResponse } from '@/lib/agent-responses';
 
 let db: any = null;
 try {
@@ -125,35 +126,6 @@ IMPORTANT BEHAVIORS:
 - Always consider the customer's perspective and emotional state`,
 };
 
-// Fallback responses if LLM fails
-const FALLBACK_RESPONSES: Record<string, string[]> = {
-  'development': [
-    "I'd be happy to help with that development task! However, I'm currently experiencing a connectivity issue with my AI engine. Please try again in a moment, and I'll provide you with complete code and architecture recommendations.",
-    "I'm working on your request but hit a temporary processing issue. Let me try again — could you resend your message? I'll make sure to provide full code with proper structure and documentation.",
-  ],
-  'testing': [
-    "I'd love to create comprehensive tests for you! I'm experiencing a brief connectivity issue. Please try again and I'll provide complete test suites with full coverage.",
-  ],
-  'business-analysis': [
-    "I'm ready to analyze that for you! I'm experiencing a temporary processing delay. Please retry and I'll deliver a detailed analysis with requirements, user stories, and process maps.",
-  ],
-  'sales': [
-    "I'd be glad to help with your sales strategy! I'm briefly unavailable due to a processing issue. Please try again for detailed proposals, scripts, and pipeline analysis.",
-  ],
-  'implementation': [
-    "I can help with that implementation plan! I'm experiencing a temporary connectivity issue. Please retry for complete deployment scripts, runbooks, and rollout strategies.",
-  ],
-  'data-analysis': [
-    "I'm ready to analyze your data! I'm experiencing a brief processing delay. Please try again for complete analysis code, visualizations, and statistical findings.",
-  ],
-  'system-admin': [
-    "I can assist with that infrastructure task! I'm having a temporary connectivity issue. Please retry for complete infrastructure configs, automation scripts, and security hardening.",
-  ],
-  'support': [
-    "I'd love to help resolve that issue! I'm experiencing a brief processing delay. Please try again for detailed troubleshooting steps, knowledge base articles, and resolution guides.",
-  ],
-};
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -213,7 +185,7 @@ export async function POST(req: NextRequest) {
     // Add the current user message (it's already in history, but ensure it's the last one)
     // The history already includes the current message, so we're good
 
-    // Call the LLM
+    // Call the LLM (when available), otherwise use intelligent template-based responses
     let aiResponse: string;
     try {
       const zai = await getZAI();
@@ -228,10 +200,12 @@ export async function POST(req: NextRequest) {
         throw new Error('Empty response from AI');
       }
     } catch (llmError: any) {
-      console.error('LLM call failed:', llmError?.message);
-      // Fallback to a helpful error response
-      const fallbacks = FALLBACK_RESPONSES[agent.type] || FALLBACK_RESPONSES['development'];
-      aiResponse = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+      console.error('LLM call failed, using contextual fallback:', llmError?.message);
+      // Use intelligent contextual response generator instead of random one-liners
+      aiResponse = generateContextualResponse(
+        { id: agent.id, type: agent.type, name: agent.name, systemPrompt: agent.systemPrompt || '', capabilities: agent.capabilities || '' },
+        content
+      );
     }
 
     // Save AI response

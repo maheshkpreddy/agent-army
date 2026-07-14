@@ -1,9 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "next build",
-  "installCommand": "bun install",
-  "outputDirectory": ".next",
-  "env": {
-    "NEXTAUTH_SECRET": "marq-ai-agent-tribe-secret-key-2024"
-  }
+  "installCommand": "bun install && bun run db:generate",
+  "buildCommand": "bun run build",
+  "outputDirectory": ".next"
 }

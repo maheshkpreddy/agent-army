@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isVercel, memoryStore } from '@/lib/memory-store';
-import { ensureZAIConfig } from '@/lib/zai-init';
+import { getZAIConfigFromEnv } from '@/lib/zai-init';
 
 let db: any = null;
 try {
@@ -14,9 +14,14 @@ try {
 let zaiInstance: any = null;
 async function getZAI() {
   if (!zaiInstance) {
-    await ensureZAIConfig();
     const ZAI = (await import('z-ai-web-dev-sdk')).default;
-    zaiInstance = await ZAI.create();
+    // Try config from env vars first (for Vercel), then fall back to ZAI.create() (local config file)
+    const envConfig = getZAIConfigFromEnv();
+    if (envConfig) {
+      zaiInstance = new ZAI(envConfig);
+    } else {
+      zaiInstance = await ZAI.create();
+    }
   }
   return zaiInstance;
 }

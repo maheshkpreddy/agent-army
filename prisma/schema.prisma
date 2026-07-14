@@ -7,41 +7,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Category {
-  id          String  @id @default(cuid())
-  name        String  @unique
-  slug        String  @unique
-  icon        String?
-  description String?
-  color       String?
-  order       Int     @default(0)
-  skills      Skill[]
-}
-
-model Skill {
+model Agent {
   id          String   @id @default(cuid())
   name        String   @unique
   slug        String   @unique
+  type        String   // development, testing, business-analysis, sales, implementation, data-analysis, system-admin, support
   description String
-  content     String            // Full SKILL.md content
-  tools       String?           // Comma-separated list of tools
-  model       String?           // Model override if any
-  userInvocable Boolean  @default(true)
-  featured    Boolean  @default(false)
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  tags        Tag[]
+  avatar      String?  // emoji or icon identifier
+  color       String?  // primary color hex
+  status      String   @default("idle") // idle, busy, error
+  capabilities String  // comma-separated list
+  systemPrompt String? // the agent's system prompt / personality
+  tasksCompleted Int   @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@index([categoryId])
-  @@index([name])
-  @@index([slug])
+  tasks       Task[]
+
+  @@index([type])
+  @@index([status])
 }
 
-model Tag {
-  id     String @id @default(cuid())
-  name   String @unique
-  slug   String @unique
-  skills Skill[]
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      String   @default("pending") // pending, running, completed, failed
+  priority    String   @default("medium") // low, medium, high, critical
+  result      String?  // task result or output
+  agentId     String
+  agent       Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([agentId])
+  @@index([status])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  role      String   // user, agent
+  content   String
+  agentId   String
+  taskId    String?
+  createdAt DateTime @default(now())
+
+  @@index([agentId])
+  @@index([createdAt])
 }

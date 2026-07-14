@@ -14,16 +14,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MArk AI Skills Platform — 170+ Production-Ready AI Skills",
-  description: "Browse, discover, and deploy production-ready AI skills for business, engineering, marketing, and more. Powered by MArk AI.",
-  keywords: ["AI skills", "MArk AI", "Claude skills", "AI agents", "automation", "business AI"],
-  authors: [{ name: "MArk AI" }],
+  title: "Agent Army — Your AI Workforce, Deployed and Ready",
+  description: "Deploy and manage specialized AI agents for Development, Testing, Business Analysis, Sales, Implementation, Data Analysis, System Admin, and Support.",
+  keywords: ["AI agents", "Agent Army", "AI workforce", "automation", "development agents", "testing agents"],
+  authors: [{ name: "Agent Army" }],
   icons: {
     icon: "/logo.svg",
   },
   openGraph: {
-    title: "MArk AI Skills Platform",
-    description: "170+ Production-Ready AI Skills for Business, Engineering, Marketing & More",
+    title: "Agent Army — Your AI Workforce",
+    description: "8 Specialized AI Agents Ready to Work for You",
     type: "website",
   },
 };

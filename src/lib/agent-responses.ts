@@ -810,9 +810,9 @@ jobs:
       - run: npm run build
       - uses: amondnet/vercel-action@v25
         with:
-          vercel-token: \${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: \${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: \${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-token: \\\${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: \\\${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: \\\${{ secrets.VERCEL_PROJECT_ID }}
 \`\`\`
 
 ## 🛡️ Rollback Plan
@@ -923,41 +923,35 @@ I'm SysAdminAgent, your infrastructure specialist. Here's my assessment and reco
 # health-check.sh - Run comprehensive system health check
 
 echo "=== System Health Check ==="
-echo "Date: $(date)"
+echo "Date: " + date
 echo ""
 
 # CPU usage
-CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}')
-echo "CPU Usage: ${CPU_USAGE}%"
-if (( $(echo "$CPU_USAGE > 80" | bc -l) )); then
-  echo "  ⚠️  WARNING: High CPU usage!"
+CPU_TOP=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}')
+echo "CPU Usage: " $CPU_TOP "%"
+if [ "$(echo "$CPU_TOP > 80" | bc -l)" = "1" ]; then
+  echo "  WARNING: High CPU usage!"
 fi
 
 # Memory usage
-MEM_USAGE=$(free | grep Mem | awk '{printf "%.1f", $3/$2 * 100}')
-echo "Memory Usage: ${MEM_USAGE}%"
-if (( $(echo "$MEM_USAGE > 85" | bc -l) )); then
-  echo "  ⚠️  WARNING: High memory usage!"
+MEM_FREE=$(free | grep Mem | awk '{printf "%.1f", $3/$2 * 100}')
+echo "Memory Usage: " $MEM_FREE "%"
+if [ "$(echo "$MEM_FREE > 85" | bc -l)" = "1" ]; then
+  echo "  WARNING: High memory usage!"
 fi
 
 # Disk usage
 echo "Disk Usage:"
-df -h | grep -E "^/dev/" | while read line; do
-  USAGE=$(echo "$line" | awk '{print $5}' | tr -d '%')
-  echo "  $line"
-  if [ "$USAGE" -gt 85 ]; then
-    echo "  ⚠️  WARNING: Disk almost full!"
-  fi
-done
+df -h | grep -E "^/dev/"
 
 # Check critical services
 echo ""
 echo "Service Status:"
 for service in nginx postgresql redis; do
   if systemctl is-active --quiet "$service"; then
-    echo "  ✅ $service: Running"
+    echo "  OK: $service: Running"
   else
-    echo "  ❌ $service: NOT RUNNING"
+    echo "  ERROR: $service: NOT RUNNING"
   fi
 done
 \`\`\`

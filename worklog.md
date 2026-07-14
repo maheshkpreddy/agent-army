@@ -119,3 +119,63 @@ Stage Summary:
 - Users/Seed API: 6 roles available
 - GitHub: maheshkpreddy/agent-army (pushed)
 - Vercel project: prj_sN0luN1NkuUm9bMba17QCgxRccKK
+
+---
+Task ID: 2
+Agent: Super Z (Main)
+Task: Fix DevAgent and TestAgent - Add website generation, URL testing, markdown rendering, and task result display
+
+Work Log:
+- Explored entire codebase to identify root causes of agent issues
+- Found that agents only returned plain text with no file generation, preview, or download capabilities
+- Found that chat messages rendered as plain text (no markdown/code highlighting)
+- Found that task results were never displayed in the UI
+- Found duplicate TabsContent bug on line 977
+- Created /api/agents/build endpoint for website generation with file creation
+- Created /api/agents/test-url endpoint for URL testing with report generation
+- Created /api/agents/download endpoint for serving generated files and reports
+- Created MarkdownRenderer component with react-markdown + react-syntax-highlighter
+- Enhanced chat route to detect website build and URL test requests automatically
+- Added TaskResultCard component with expandable result view and download buttons
+- Fixed duplicate TabsContent bug
+- Updated chat message rendering to use MarkdownRenderer
+- Passed tasks state to AgentDetail component for proper task history display
+- Successfully built and tested the project
+- Pushed all changes to GitHub (which triggers Vercel auto-deploy)
+
+Stage Summary:
+- DevAgent now detects website build requests and generates complete projects with preview + download
+- TestAgent now detects URL testing requests and generates test reports with preview + download
+- Chat messages now render with full markdown support including syntax highlighting
+- Task results are now viewable with expand/collapse and download functionality
+- All new API endpoints: /api/agents/build, /api/agents/test-url, /api/agents/download
+- Key files modified: chat/route.ts, page.tsx, MarkdownRenderer.tsx (new)
+- Key files created: build/route.ts, test-url/route.ts, download/route.ts, MarkdownRenderer.tsx
+- Pushed to GitHub: commit a76b83f on main branch
+
+---
+Task ID: 3
+Agent: Super Z (Main)
+Task: Redesign UI to ZAI-style 3-panel layout for easier navigation and preview
+
+Work Log:
+- Analyzed the existing page.tsx (1143 lines) and identified all components
+- Completely rewrote page.tsx with ZAI-style 3-panel layout
+- Built collapsible left sidebar with agent list, search, status indicators, and user profile
+- Built center chat panel with message rendering, markdown support, and Chat/Tasks view switcher
+- Built right preview panel with iframe for website/report previews
+- Added quick suggestion buttons for new conversations
+- Added agent avatars on messages with typing animation
+- Added copy code button on code blocks
+- Added expandable task result cards with download and preview buttons
+- Fixed hooks ordering issue in MarkdownRenderer (useState before early returns)
+- Tested with Agent Browser: login, agent selection, chat, task views all work
+- Pushed to GitHub (commit 11fd8f5) triggering Vercel auto-deploy
+
+Stage Summary:
+- New ZAI-style UI: collapsible sidebar (260px/64px) | chat area | preview panel (480px)
+- Clean dark theme with subtle borders (#0a0a0f background)
+- All 8 agents accessible from sidebar with status dots
+- Chat and Tasks views switchable from header
+- Preview panel opens automatically when website/report is generated
+- Browser-verified: no console errors, all interactions work

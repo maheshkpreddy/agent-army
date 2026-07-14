@@ -256,7 +256,9 @@ export async function GET(req: NextRequest) {
 
     if (isVercel() || !db) {
       const tasks = memoryStore.getTasks(agentId || undefined);
-      return NextResponse.json({ tasks });
+      return NextResponse.json({ tasks }, {
+        headers: { 'Cache-Control': 'private, max-age=5' },
+      });
     }
 
     const where = agentId ? { agentId } : {};
@@ -268,7 +270,9 @@ export async function GET(req: NextRequest) {
       take: 50,
     });
 
-    return NextResponse.json({ tasks });
+    return NextResponse.json({ tasks }, {
+      headers: { 'Cache-Control': 'private, max-age=5' },
+    });
   } catch (error: any) {
     const tasks = memoryStore.getTasks();
     return NextResponse.json({ tasks });

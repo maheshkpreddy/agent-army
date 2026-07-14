@@ -95,17 +95,35 @@ const AGENT_DEFINITIONS = [
   }
 ];
 
+// Cache the agent list for 10 seconds (avoids repeated computation)
+let cachedAgents: any = null;
+let cacheTimestamp = 0;
+const CACHE_TTL = 10000; // 10 seconds
+
 export async function GET() {
   try {
+    // Return cached data if fresh
+    const now = Date.now();
+    if (cachedAgents && (now - cacheTimestamp) < CACHE_TTL) {
+      return NextResponse.json(cachedAgents, {
+        headers: { 'Cache-Control': 'private, max-age=10' },
+      });
+    }
+
     if (isVercel() || !db) {
       // Use memory store
       const agents = memoryStore.getAgents();
-      return NextResponse.json({
+      const result = {
         agents: agents.map(agent => ({
           ...agent,
           tasks: memoryStore.getActiveTasks(agent.id),
           _count: { tasks: memoryStore.getActiveTasks(agent.id).length }
         }))
+      };
+      cachedAgents = result;
+      cacheTimestamp = now;
+      return NextResponse.json(result, {
+        headers: { 'Cache-Control': 'private, max-age=10' },
       });
     }
 
@@ -141,7 +159,13 @@ export async function GET() {
       orderBy: { name: 'asc' }
     });
 
-    return NextResponse.json({ agents });
+    const result = { agents };
+    cachedAgents = result;
+    cacheTimestamp = now;
+
+    return NextResponse.json(result, {
+      headers: { 'Cache-Control': 'private, max-age=10' },
+    });
   } catch (error: any) {
     // Fallback to memory store on any error
     const agents = memoryStore.getAgents();

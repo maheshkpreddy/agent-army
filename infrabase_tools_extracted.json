@@ -1,0 +1,1580 @@
+[
+  {
+    "name": "Azure Ai Search",
+    "slug": "azure-ai-search",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/azure-ai-search"
+  },
+  {
+    "name": "Chroma",
+    "slug": "chroma",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/chroma"
+  },
+  {
+    "name": "Cloudflare Vectorize",
+    "slug": "cloudflare-vectorize",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/cloudflare-vectorize"
+  },
+  {
+    "name": "Elasticsearch",
+    "slug": "elasticsearch",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/elasticsearch"
+  },
+  {
+    "name": "Epsilla",
+    "slug": "epsilla",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/epsilla"
+  },
+  {
+    "name": "Faiss",
+    "slug": "faiss",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/faiss"
+  },
+  {
+    "name": "Lancedb",
+    "slug": "lancedb",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/lancedb"
+  },
+  {
+    "name": "Marqo",
+    "slug": "marqo",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/marqo"
+  },
+  {
+    "name": "Meilisearch",
+    "slug": "meilisearch",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/meilisearch"
+  },
+  {
+    "name": "Milvus",
+    "slug": "milvus",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/milvus"
+  },
+  {
+    "name": "Myscale",
+    "slug": "myscale",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/myscale"
+  },
+  {
+    "name": "Opensearch",
+    "slug": "opensearch",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/opensearch"
+  },
+  {
+    "name": "Pgvecto Rs",
+    "slug": "pgvecto-rs",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/pgvecto-rs"
+  },
+  {
+    "name": "Pgvector",
+    "slug": "pgvector",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/pgvector"
+  },
+  {
+    "name": "Pinecone",
+    "slug": "pinecone",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/pinecone"
+  },
+  {
+    "name": "Qdrant",
+    "slug": "qdrant",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/qdrant"
+  },
+  {
+    "name": "Redis",
+    "slug": "redis",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/redis"
+  },
+  {
+    "name": "Supabase Vector",
+    "slug": "supabase-vector",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/supabase-vector"
+  },
+  {
+    "name": "Topk",
+    "slug": "topk",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/topk"
+  },
+  {
+    "name": "Turbopuffer",
+    "slug": "turbopuffer",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/turbopuffer"
+  },
+  {
+    "name": "Typesense",
+    "slug": "typesense",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/typesense"
+  },
+  {
+    "name": "Vespa",
+    "slug": "vespa",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/vespa"
+  },
+  {
+    "name": "Weaviate",
+    "slug": "weaviate",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/weaviate"
+  },
+  {
+    "name": "Zilliz",
+    "slug": "zilliz",
+    "category": "vector-databases",
+    "url": "https://infrabase.ai/vector-databases/zilliz"
+  },
+  {
+    "name": "Dify",
+    "slug": "dify",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/dify"
+  },
+  {
+    "name": "Finetunedb",
+    "slug": "finetunedb",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/finetunedb"
+  },
+  {
+    "name": "Fixie",
+    "slug": "fixie",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/fixie"
+  },
+  {
+    "name": "Giskard",
+    "slug": "giskard",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/giskard"
+  },
+  {
+    "name": "Klu",
+    "slug": "klu",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/klu"
+  },
+  {
+    "name": "Knit",
+    "slug": "knit",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/knit"
+  },
+  {
+    "name": "Orq Ai",
+    "slug": "orq-ai",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/orq-ai"
+  },
+  {
+    "name": "Portkey",
+    "slug": "portkey",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/portkey"
+  },
+  {
+    "name": "Prompt Mixer",
+    "slug": "prompt-mixer",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/prompt-mixer"
+  },
+  {
+    "name": "Prompt Optimizer",
+    "slug": "prompt-optimizer",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/prompt-optimizer"
+  },
+  {
+    "name": "Promptfoo",
+    "slug": "promptfoo",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/promptfoo"
+  },
+  {
+    "name": "Promptlayer",
+    "slug": "promptlayer",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/promptlayer"
+  },
+  {
+    "name": "Promptleo",
+    "slug": "promptleo",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/promptleo"
+  },
+  {
+    "name": "Prompty",
+    "slug": "prompty",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/prompty"
+  },
+  {
+    "name": "Superagent",
+    "slug": "superagent",
+    "category": "prompt-engineering",
+    "url": "https://infrabase.ai/prompt-engineering/superagent"
+  },
+  {
+    "name": "Agenta",
+    "slug": "agenta",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/agenta"
+  },
+  {
+    "name": "Arize Ai",
+    "slug": "arize-ai",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/arize-ai"
+  },
+  {
+    "name": "Braintrust",
+    "slug": "braintrust",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/braintrust"
+  },
+  {
+    "name": "Cekura",
+    "slug": "cekura",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/cekura"
+  },
+  {
+    "name": "Cleanlab",
+    "slug": "cleanlab",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/cleanlab"
+  },
+  {
+    "name": "Cloudflare Ai Gateway",
+    "slug": "cloudflare-ai-gateway",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/cloudflare-ai-gateway"
+  },
+  {
+    "name": "Comet Opik",
+    "slug": "comet-opik",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/comet-opik"
+  },
+  {
+    "name": "Datadog Llm Observability",
+    "slug": "datadog-llm-observability",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/datadog-llm-observability"
+  },
+  {
+    "name": "Deepeval",
+    "slug": "deepeval",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/deepeval"
+  },
+  {
+    "name": "Dunetrace",
+    "slug": "dunetrace",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/dunetrace"
+  },
+  {
+    "name": "Evidently Ai",
+    "slug": "evidently-ai",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/evidently-ai"
+  },
+  {
+    "name": "Future Agi",
+    "slug": "future-agi",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/future-agi"
+  },
+  {
+    "name": "Galileo",
+    "slug": "galileo",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/galileo"
+  },
+  {
+    "name": "Giskard",
+    "slug": "giskard",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/giskard"
+  },
+  {
+    "name": "Greptime",
+    "slug": "greptime",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/greptime"
+  },
+  {
+    "name": "Guardrails Ai",
+    "slug": "guardrails-ai",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/guardrails-ai"
+  },
+  {
+    "name": "Hamming Ai",
+    "slug": "hamming-ai",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/hamming-ai"
+  },
+  {
+    "name": "Helicone",
+    "slug": "helicone",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/helicone"
+  },
+  {
+    "name": "Honeyhive",
+    "slug": "honeyhive",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/honeyhive"
+  },
+  {
+    "name": "Humanloop",
+    "slug": "humanloop",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/humanloop"
+  },
+  {
+    "name": "Klu",
+    "slug": "klu",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/klu"
+  },
+  {
+    "name": "Lakera",
+    "slug": "lakera",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/lakera"
+  },
+  {
+    "name": "Langfuse",
+    "slug": "langfuse",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/langfuse"
+  },
+  {
+    "name": "Langsmith",
+    "slug": "langsmith",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/langsmith"
+  },
+  {
+    "name": "Langwatch",
+    "slug": "langwatch",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/langwatch"
+  },
+  {
+    "name": "Llm Guard",
+    "slug": "llm-guard",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/llm-guard"
+  },
+  {
+    "name": "Log10",
+    "slug": "log10",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/log10"
+  },
+  {
+    "name": "Lunary",
+    "slug": "lunary",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/lunary"
+  },
+  {
+    "name": "Nemo Guardrails",
+    "slug": "nemo-guardrails",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/nemo-guardrails"
+  },
+  {
+    "name": "Patronus Ai",
+    "slug": "patronus-ai",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/patronus-ai"
+  },
+  {
+    "name": "Portkey",
+    "slug": "portkey",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/portkey"
+  },
+  {
+    "name": "Presidio",
+    "slug": "presidio",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/presidio"
+  },
+  {
+    "name": "Promptlayer",
+    "slug": "promptlayer",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/promptlayer"
+  },
+  {
+    "name": "Ragas",
+    "slug": "ragas",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/ragas"
+  },
+  {
+    "name": "Rhesis Ai",
+    "slug": "rhesis-ai",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/rhesis-ai"
+  },
+  {
+    "name": "Sentrial",
+    "slug": "sentrial",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/sentrial"
+  },
+  {
+    "name": "Traceloop",
+    "slug": "traceloop",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/traceloop"
+  },
+  {
+    "name": "Truefoundry",
+    "slug": "truefoundry",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/truefoundry"
+  },
+  {
+    "name": "Trulens",
+    "slug": "trulens",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/trulens"
+  },
+  {
+    "name": "Vercel Ai Gateway",
+    "slug": "vercel-ai-gateway",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/vercel-ai-gateway"
+  },
+  {
+    "name": "Weights Biases",
+    "slug": "weights-biases",
+    "category": "observability-analytics",
+    "url": "https://infrabase.ai/observability-analytics/weights-biases"
+  },
+  {
+    "name": "Aiqu",
+    "slug": "aiqu",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/aiqu"
+  },
+  {
+    "name": "Airon",
+    "slug": "airon",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/airon"
+  },
+  {
+    "name": "Aki Io",
+    "slug": "aki-io",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/aki-io"
+  },
+  {
+    "name": "Amazon Bedrock",
+    "slug": "amazon-bedrock",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/amazon-bedrock"
+  },
+  {
+    "name": "Anthropic Claude",
+    "slug": "anthropic-claude",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/anthropic-claude"
+  },
+  {
+    "name": "Anyscale",
+    "slug": "anyscale",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/anyscale"
+  },
+  {
+    "name": "Ark Labs",
+    "slug": "ark-labs",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/ark-labs"
+  },
+  {
+    "name": "Baseten",
+    "slug": "baseten",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/baseten"
+  },
+  {
+    "name": "Beam",
+    "slug": "beam",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/beam"
+  },
+  {
+    "name": "Bentoml",
+    "slug": "bentoml",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/bentoml"
+  },
+  {
+    "name": "Berget Ai",
+    "slug": "berget-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/berget-ai"
+  },
+  {
+    "name": "Cerebras",
+    "slug": "cerebras",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/cerebras"
+  },
+  {
+    "name": "Cerebrium",
+    "slug": "cerebrium",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/cerebrium"
+  },
+  {
+    "name": "Cheapestinference",
+    "slug": "cheapestinference",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/cheapestinference"
+  },
+  {
+    "name": "Cloudflare Workers Ai",
+    "slug": "cloudflare-workers-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/cloudflare-workers-ai"
+  },
+  {
+    "name": "Codingplanx",
+    "slug": "codingplanx",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/codingplanx"
+  },
+  {
+    "name": "Cohere",
+    "slug": "cohere",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/cohere"
+  },
+  {
+    "name": "Coreweave",
+    "slug": "coreweave",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/coreweave"
+  },
+  {
+    "name": "Cortecs Ai",
+    "slug": "cortecs-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/cortecs-ai"
+  },
+  {
+    "name": "Deepinfra",
+    "slug": "deepinfra",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/deepinfra"
+  },
+  {
+    "name": "Deepseek",
+    "slug": "deepseek",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/deepseek"
+  },
+  {
+    "name": "Eurouter",
+    "slug": "eurouter",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/eurouter"
+  },
+  {
+    "name": "Evroc",
+    "slug": "evroc",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/evroc"
+  },
+  {
+    "name": "Fal",
+    "slug": "fal",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/fal"
+  },
+  {
+    "name": "Fast Pivot",
+    "slug": "fast-pivot",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/fast-pivot"
+  },
+  {
+    "name": "Ferryapi",
+    "slug": "ferryapi",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/ferryapi"
+  },
+  {
+    "name": "Fireworks Ai",
+    "slug": "fireworks-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/fireworks-ai"
+  },
+  {
+    "name": "General Compute",
+    "slug": "general-compute",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/general-compute"
+  },
+  {
+    "name": "Genesis Cloud",
+    "slug": "genesis-cloud",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/genesis-cloud"
+  },
+  {
+    "name": "Geodd",
+    "slug": "geodd",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/geodd"
+  },
+  {
+    "name": "Google Gemini Api",
+    "slug": "google-gemini-api",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/google-gemini-api"
+  },
+  {
+    "name": "Groq",
+    "slug": "groq",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/groq"
+  },
+  {
+    "name": "Hyperstack",
+    "slug": "hyperstack",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/hyperstack"
+  },
+  {
+    "name": "Infercom",
+    "slug": "infercom",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/infercom"
+  },
+  {
+    "name": "Ionos Ai Model Hub",
+    "slug": "ionos-ai-model-hub",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/ionos-ai-model-hub"
+  },
+  {
+    "name": "Ionrouter",
+    "slug": "ionrouter",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/ionrouter"
+  },
+  {
+    "name": "Jina Ai",
+    "slug": "jina-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/jina-ai"
+  },
+  {
+    "name": "Lambda",
+    "slug": "lambda",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/lambda"
+  },
+  {
+    "name": "Lepton",
+    "slug": "lepton",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/lepton"
+  },
+  {
+    "name": "Libertai",
+    "slug": "libertai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/libertai"
+  },
+  {
+    "name": "Llmbase",
+    "slug": "llmbase",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/llmbase"
+  },
+  {
+    "name": "Llmwise",
+    "slug": "llmwise",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/llmwise"
+  },
+  {
+    "name": "Lyceum",
+    "slug": "lyceum",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/lyceum"
+  },
+  {
+    "name": "Miapi",
+    "slug": "miapi",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/miapi"
+  },
+  {
+    "name": "Mistral",
+    "slug": "mistral",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/mistral"
+  },
+  {
+    "name": "Modal",
+    "slug": "modal",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/modal"
+  },
+  {
+    "name": "Monster Api",
+    "slug": "monster-api",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/monster-api"
+  },
+  {
+    "name": "Nebius",
+    "slug": "nebius",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/nebius"
+  },
+  {
+    "name": "Novita Ai",
+    "slug": "novita-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/novita-ai"
+  },
+  {
+    "name": "Nscale",
+    "slug": "nscale",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/nscale"
+  },
+  {
+    "name": "Octoai",
+    "slug": "octoai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/octoai"
+  },
+  {
+    "name": "Openai",
+    "slug": "openai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/openai"
+  },
+  {
+    "name": "Openrouter",
+    "slug": "openrouter",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/openrouter"
+  },
+  {
+    "name": "Opper",
+    "slug": "opper",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/opper"
+  },
+  {
+    "name": "Our Token",
+    "slug": "our-token",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/our-token"
+  },
+  {
+    "name": "Ovhcloud Ai",
+    "slug": "ovhcloud-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/ovhcloud-ai"
+  },
+  {
+    "name": "Packet Ai",
+    "slug": "packet-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/packet-ai"
+  },
+  {
+    "name": "Prem Ai",
+    "slug": "prem-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/prem-ai"
+  },
+  {
+    "name": "Replicate",
+    "slug": "replicate",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/replicate"
+  },
+  {
+    "name": "Requesty",
+    "slug": "requesty",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/requesty"
+  },
+  {
+    "name": "Runpod",
+    "slug": "runpod",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/runpod"
+  },
+  {
+    "name": "Sambanova",
+    "slug": "sambanova",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/sambanova"
+  },
+  {
+    "name": "Scaleway",
+    "slug": "scaleway",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/scaleway"
+  },
+  {
+    "name": "Sglang",
+    "slug": "sglang",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/sglang"
+  },
+  {
+    "name": "Siliconflow",
+    "slug": "siliconflow",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/siliconflow"
+  },
+  {
+    "name": "Synexa",
+    "slug": "synexa",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/synexa"
+  },
+  {
+    "name": "Taiga Cloud",
+    "slug": "taiga-cloud",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/taiga-cloud"
+  },
+  {
+    "name": "Tensorix",
+    "slug": "tensorix",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/tensorix"
+  },
+  {
+    "name": "Theta Edgecloud",
+    "slug": "theta-edgecloud",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/theta-edgecloud"
+  },
+  {
+    "name": "Together Ai",
+    "slug": "together-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/together-ai"
+  },
+  {
+    "name": "Tokensmind",
+    "slug": "tokensmind",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/tokensmind"
+  },
+  {
+    "name": "Tokenware",
+    "slug": "tokenware",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/tokenware"
+  },
+  {
+    "name": "Vast Ai",
+    "slug": "vast-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/vast-ai"
+  },
+  {
+    "name": "Vercel Ai Gateway",
+    "slug": "vercel-ai-gateway",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/vercel-ai-gateway"
+  },
+  {
+    "name": "Verda",
+    "slug": "verda",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/verda"
+  },
+  {
+    "name": "Vllm",
+    "slug": "vllm",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/vllm"
+  },
+  {
+    "name": "Vmetal",
+    "slug": "vmetal",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/vmetal"
+  },
+  {
+    "name": "Voyage Ai",
+    "slug": "voyage-ai",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/voyage-ai"
+  },
+  {
+    "name": "Wayscloud",
+    "slug": "wayscloud",
+    "category": "inference-apis",
+    "url": "https://infrabase.ai/inference-apis/wayscloud"
+  },
+  {
+    "name": "Burr",
+    "slug": "burr",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/burr"
+  },
+  {
+    "name": "Cc Switch",
+    "slug": "cc-switch",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/cc-switch"
+  },
+  {
+    "name": "Dify",
+    "slug": "dify",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/dify"
+  },
+  {
+    "name": "Dspy",
+    "slug": "dspy",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/dspy"
+  },
+  {
+    "name": "Google Adk",
+    "slug": "google-adk",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/google-adk"
+  },
+  {
+    "name": "Gpt4All",
+    "slug": "gpt4all",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/gpt4all"
+  },
+  {
+    "name": "Haystack",
+    "slug": "haystack",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/haystack"
+  },
+  {
+    "name": "Instructor",
+    "slug": "instructor",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/instructor"
+  },
+  {
+    "name": "Jan",
+    "slug": "jan",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/jan"
+  },
+  {
+    "name": "Langchain",
+    "slug": "langchain",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/langchain"
+  },
+  {
+    "name": "Langgraph",
+    "slug": "langgraph",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/langgraph"
+  },
+  {
+    "name": "Langroid",
+    "slug": "langroid",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/langroid"
+  },
+  {
+    "name": "Litellm",
+    "slug": "litellm",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/litellm"
+  },
+  {
+    "name": "Llama Cpp",
+    "slug": "llama-cpp",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/llama-cpp"
+  },
+  {
+    "name": "Llamaindex",
+    "slug": "llamaindex",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/llamaindex"
+  },
+  {
+    "name": "Llm Browser",
+    "slug": "llm-browser",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/llm-browser"
+  },
+  {
+    "name": "Llmkit",
+    "slug": "llmkit",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/llmkit"
+  },
+  {
+    "name": "Lm Studio",
+    "slug": "lm-studio",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/lm-studio"
+  },
+  {
+    "name": "Localai",
+    "slug": "localai",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/localai"
+  },
+  {
+    "name": "Mastra",
+    "slug": "mastra",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/mastra"
+  },
+  {
+    "name": "Microsoft Agent Framework",
+    "slug": "microsoft-agent-framework",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/microsoft-agent-framework"
+  },
+  {
+    "name": "Modular",
+    "slug": "modular",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/modular"
+  },
+  {
+    "name": "Ollama",
+    "slug": "ollama",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/ollama"
+  },
+  {
+    "name": "Phidata",
+    "slug": "phidata",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/phidata"
+  },
+  {
+    "name": "Pydantic Ai",
+    "slug": "pydantic-ai",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/pydantic-ai"
+  },
+  {
+    "name": "Semantic Kernel",
+    "slug": "semantic-kernel",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/semantic-kernel"
+  },
+  {
+    "name": "Spring Ai",
+    "slug": "spring-ai",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/spring-ai"
+  },
+  {
+    "name": "Stagehand",
+    "slug": "stagehand",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/stagehand"
+  },
+  {
+    "name": "Tanstack Ai",
+    "slug": "tanstack-ai",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/tanstack-ai"
+  },
+  {
+    "name": "Vercel Ai Sdk",
+    "slug": "vercel-ai-sdk",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/vercel-ai-sdk"
+  },
+  {
+    "name": "Vllm",
+    "slug": "vllm",
+    "category": "frameworks-stacks",
+    "url": "https://infrabase.ai/frameworks-stacks/vllm"
+  },
+  {
+    "name": "Amazon Bedrock",
+    "slug": "amazon-bedrock",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/amazon-bedrock"
+  },
+  {
+    "name": "Anyscale",
+    "slug": "anyscale",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/anyscale"
+  },
+  {
+    "name": "Axolotl",
+    "slug": "axolotl",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/axolotl"
+  },
+  {
+    "name": "Fal",
+    "slug": "fal",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/fal"
+  },
+  {
+    "name": "Finetunedb",
+    "slug": "finetunedb",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/finetunedb"
+  },
+  {
+    "name": "Hugging Face",
+    "slug": "hugging-face",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/hugging-face"
+  },
+  {
+    "name": "Klu",
+    "slug": "klu",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/klu"
+  },
+  {
+    "name": "Lamini",
+    "slug": "lamini",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/lamini"
+  },
+  {
+    "name": "Langsmith",
+    "slug": "langsmith",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/langsmith"
+  },
+  {
+    "name": "Llama Factory",
+    "slug": "llama-factory",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/llama-factory"
+  },
+  {
+    "name": "Ludwig",
+    "slug": "ludwig",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/ludwig"
+  },
+  {
+    "name": "Modal",
+    "slug": "modal",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/modal"
+  },
+  {
+    "name": "Monster Api",
+    "slug": "monster-api",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/monster-api"
+  },
+  {
+    "name": "Openai",
+    "slug": "openai",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/openai"
+  },
+  {
+    "name": "Ovhcloud Ai",
+    "slug": "ovhcloud-ai",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/ovhcloud-ai"
+  },
+  {
+    "name": "Prem Ai",
+    "slug": "prem-ai",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/prem-ai"
+  },
+  {
+    "name": "Replicate",
+    "slug": "replicate",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/replicate"
+  },
+  {
+    "name": "Together Ai",
+    "slug": "together-ai",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/together-ai"
+  },
+  {
+    "name": "Torchtune",
+    "slug": "torchtune",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/torchtune"
+  },
+  {
+    "name": "Trl",
+    "slug": "trl",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/trl"
+  },
+  {
+    "name": "Unsloth",
+    "slug": "unsloth",
+    "category": "fine-tuning",
+    "url": "https://infrabase.ai/fine-tuning/unsloth"
+  },
+  {
+    "name": "Assemblyai",
+    "slug": "assemblyai",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/assemblyai"
+  },
+  {
+    "name": "Cartesia",
+    "slug": "cartesia",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/cartesia"
+  },
+  {
+    "name": "Cekura",
+    "slug": "cekura",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/cekura"
+  },
+  {
+    "name": "Deepgram",
+    "slug": "deepgram",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/deepgram"
+  },
+  {
+    "name": "Eleven Labs",
+    "slug": "eleven-labs",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/eleven-labs"
+  },
+  {
+    "name": "Fish Audio",
+    "slug": "fish-audio",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/fish-audio"
+  },
+  {
+    "name": "Gladia",
+    "slug": "gladia",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/gladia"
+  },
+  {
+    "name": "Hume Ai",
+    "slug": "hume-ai",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/hume-ai"
+  },
+  {
+    "name": "Lemonfox",
+    "slug": "lemonfox",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/lemonfox"
+  },
+  {
+    "name": "Livekit Agents",
+    "slug": "livekit-agents",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/livekit-agents"
+  },
+  {
+    "name": "Lmnt",
+    "slug": "lmnt",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/lmnt"
+  },
+  {
+    "name": "Openai",
+    "slug": "openai",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/openai"
+  },
+  {
+    "name": "Playht",
+    "slug": "playht",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/playht"
+  },
+  {
+    "name": "Resemble Ai",
+    "slug": "resemble-ai",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/resemble-ai"
+  },
+  {
+    "name": "Rime Ai",
+    "slug": "rime-ai",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/rime-ai"
+  },
+  {
+    "name": "Samtal",
+    "slug": "samtal",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/samtal"
+  },
+  {
+    "name": "Speechifyai",
+    "slug": "speechifyai",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/speechifyai"
+  },
+  {
+    "name": "Speechmatics",
+    "slug": "speechmatics",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/speechmatics"
+  },
+  {
+    "name": "Suno",
+    "slug": "suno",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/suno"
+  },
+  {
+    "name": "Voxcpm",
+    "slug": "voxcpm",
+    "category": "audio",
+    "url": "https://infrabase.ai/audio/voxcpm"
+  },
+  {
+    "name": "Ag2",
+    "slug": "ag2",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/ag2"
+  },
+  {
+    "name": "Agentops",
+    "slug": "agentops",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/agentops"
+  },
+  {
+    "name": "Autogen",
+    "slug": "autogen",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/autogen"
+  },
+  {
+    "name": "Browserbase",
+    "slug": "browserbase",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/browserbase"
+  },
+  {
+    "name": "Burr",
+    "slug": "burr",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/burr"
+  },
+  {
+    "name": "Chatbotkit",
+    "slug": "chatbotkit",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/chatbotkit"
+  },
+  {
+    "name": "Claude Agent Sdk",
+    "slug": "claude-agent-sdk",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/claude-agent-sdk"
+  },
+  {
+    "name": "Composio",
+    "slug": "composio",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/composio"
+  },
+  {
+    "name": "Crewai",
+    "slug": "crewai",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/crewai"
+  },
+  {
+    "name": "Dust",
+    "slug": "dust",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/dust"
+  },
+  {
+    "name": "E2B",
+    "slug": "e2b",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/e2b"
+  },
+  {
+    "name": "Falsifylab",
+    "slug": "falsifylab",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/falsifylab"
+  },
+  {
+    "name": "Fixie",
+    "slug": "fixie",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/fixie"
+  },
+  {
+    "name": "Google Adk",
+    "slug": "google-adk",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/google-adk"
+  },
+  {
+    "name": "Langdock",
+    "slug": "langdock",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/langdock"
+  },
+  {
+    "name": "Langgraph",
+    "slug": "langgraph",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/langgraph"
+  },
+  {
+    "name": "Langroid",
+    "slug": "langroid",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/langroid"
+  },
+  {
+    "name": "Letta",
+    "slug": "letta",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/letta"
+  },
+  {
+    "name": "Livekit Agents",
+    "slug": "livekit-agents",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/livekit-agents"
+  },
+  {
+    "name": "Llm Browser",
+    "slug": "llm-browser",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/llm-browser"
+  },
+  {
+    "name": "Mastra",
+    "slug": "mastra",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/mastra"
+  },
+  {
+    "name": "Microsoft Agent Framework",
+    "slug": "microsoft-agent-framework",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/microsoft-agent-framework"
+  },
+  {
+    "name": "N8N",
+    "slug": "n8n",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/n8n"
+  },
+  {
+    "name": "Openai Agents Sdk",
+    "slug": "openai-agents-sdk",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/openai-agents-sdk"
+  },
+  {
+    "name": "Privateclawd",
+    "slug": "privateclawd",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/privateclawd"
+  },
+  {
+    "name": "Pydantic Ai",
+    "slug": "pydantic-ai",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/pydantic-ai"
+  },
+  {
+    "name": "Rasa",
+    "slug": "rasa",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/rasa"
+  },
+  {
+    "name": "Samtal",
+    "slug": "samtal",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/samtal"
+  },
+  {
+    "name": "Semantic Kernel",
+    "slug": "semantic-kernel",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/semantic-kernel"
+  },
+  {
+    "name": "Smolagents",
+    "slug": "smolagents",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/smolagents"
+  },
+  {
+    "name": "Stagehand",
+    "slug": "stagehand",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/stagehand"
+  },
+  {
+    "name": "Superagent",
+    "slug": "superagent",
+    "category": "agents",
+    "url": "https://infrabase.ai/agents/superagent"
+  }
+]

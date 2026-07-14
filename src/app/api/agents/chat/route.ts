@@ -16,7 +16,6 @@ let zaiInstance: any = null;
 async function getZAI() {
   if (!zaiInstance) {
     const ZAI = (await import('z-ai-web-dev-sdk')).default;
-    // Try config from env vars first (for Vercel), then fall back to ZAI.create() (local config file)
     const envConfig = getZAIConfigFromEnv();
     if (envConfig) {
       zaiInstance = new ZAI(envConfig);
@@ -27,7 +26,45 @@ async function getZAI() {
   return zaiInstance;
 }
 
-// Enhanced system prompts for each agent type — designed for detailed, actionable responses
+// Detect if user is asking to build/develop a website
+function isWebsiteBuildRequest(content: string): boolean {
+  const lower = content.toLowerCase();
+  const buildKeywords = [
+    'build me a website', 'create a website', 'develop a website', 'make a website',
+    'build a web page', 'create a web app', 'develop a web app', 'build a landing page',
+    'create a landing page', 'build me a page', 'make me a website', 'develop a page',
+    'build website', 'create website', 'develop website', 'make website',
+    'build a site', 'create a site', 'make a site', 'build a dashboard',
+    'create a dashboard', 'build a portal', 'create a portfolio', 'build an app',
+    'show me the preview', 'show me preview', 'give me preview', 'with preview',
+    'and preview', 'show preview', 'with a preview'
+  ];
+  return buildKeywords.some(kw => lower.includes(kw));
+}
+
+// Detect if user is asking to test a URL/website
+function isUrlTestRequest(content: string): boolean {
+  const lower = content.toLowerCase();
+  const testKeywords = [
+    'test this url', 'test this website', 'test this link', 'test this site',
+    'test the url', 'test the website', 'test the link', 'test the site',
+    'test url', 'test website', 'test link', 'test site',
+    'run a test on', 'check this url', 'check this website', 'check this link',
+    'analyze this url', 'analyze this website', 'audit this website', 'audit this url',
+    'qa this', 'quality check', 'performance test', 'test report for',
+    'give me a report', 'generate report', 'test and report', 'test report'
+  ];
+  const hasUrl = lower.match(/https?:\/\/[^\s]+/) !== null;
+  return testKeywords.some(kw => lower.includes(kw)) || (hasUrl && (lower.includes('test') || lower.includes('check') || lower.includes('report')));
+}
+
+// Extract URL from content
+function extractUrl(content: string): string | null {
+  const match = content.match(/https?:\/\/[^\s]+/);
+  return match ? match[0] : null;
+}
+
+// Enhanced system prompts for each agent type
 const AGENT_SYSTEM_PROMPTS: Record<string, string> = {
   'development': `You are DevAgent, a senior full-stack developer with 15+ years of experience across all major languages and frameworks. You write clean, performant, well-documented code. You follow best practices, design patterns, and security standards.
 
@@ -129,13 +166,13 @@ IMPORTANT BEHAVIORS:
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { agentId, content } = body;
+    const { agentId, content, stream: useStream = true } = body;
 
     if (!agentId || !content) {
       return NextResponse.json({ error: 'agentId and content are required' }, { status: 400 });
     }
 
-    // Get agent info — always try memory store as fallback
+    // Get agent info
     let agent: any = null;
     let chatHistory: any[] = [];
     let useDb = false;
@@ -152,9 +189,7 @@ export async function POST(req: NextRequest) {
             take: 20,
           });
         }
-      } catch (e) {
-        // Database error, fall through to memory store
-      }
+      } catch (e) {}
     }
 
     if (!useDb) {
@@ -162,10 +197,40 @@ export async function POST(req: NextRequest) {
       if (!agent) {
         return NextResponse.json({ error: 'Agent not found' }, { status: 404 });
       }
-      // Save user message
       memoryStore.createChatMessage({ role: 'user', content, agentId });
-      // Get recent chat history for context (last 20 messages)
       chatHistory = memoryStore.getChatMessages(agentId).slice(-20);
+    }
+
+    // Check for special action requests based on agent type
+    let specialActionResult: any = null;
+
+    if (agent.type === 'development' && isWebsiteBuildRequest(content)) {
+      try {
+        const buildRes = await fetch(new URL('/api/agents/build', req.url).toString(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ description: content, agentId }),
+        });
+        if (buildRes.ok) {
+          specialActionResult = await buildRes.json();
+        }
+      } catch (e) {
+        console.error('Build trigger failed:', e);
+      }
+    } else if (agent.type === 'testing' && isUrlTestRequest(content)) {
+      const targetUrl = extractUrl(content) || content;
+      try {
+        const testRes = await fetch(new URL('/api/agents/test-url', req.url).toString(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: targetUrl, description: content, agentId }),
+        });
+        if (testRes.ok) {
+          specialActionResult = await testRes.json();
+        }
+      } catch (e) {
+        console.error('Test trigger failed:', e);
+      }
     }
 
     // Build LLM messages with system prompt + chat history
@@ -174,7 +239,6 @@ export async function POST(req: NextRequest) {
       { role: 'assistant' as const, content: systemPrompt },
     ];
 
-    // Add chat history for context (skip if too many to fit)
     for (const msg of chatHistory) {
       messages.push({
         role: msg.role === 'agent' ? 'assistant' as const : (msg.role as 'user' | 'assistant'),
@@ -182,10 +246,105 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Add the current user message (it's already in history, but ensure it's the last one)
-    // The history already includes the current message, so we're good
+    // STREAMING RESPONSE - this is the key performance improvement
+    if (useStream) {
+      const encoder = new TextEncoder();
 
-    // Call the LLM (when available), otherwise use intelligent template-based responses
+      const stream = new ReadableStream({
+        async start(controller) {
+          let fullResponse = '';
+
+          try {
+            const zai = await getZAI();
+            const completion = await zai.chat.completions.create({
+              messages,
+              stream: true,
+              thinking: { type: 'disabled' },
+            });
+
+            // Stream tokens as they arrive
+            for await (const chunk of completion) {
+              const token = chunk.choices?.[0]?.delta?.content || '';
+              if (token) {
+                fullResponse += token;
+                // Send token as SSE
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'token', content: token })}\n\n`));
+              }
+            }
+
+            // If we have a special action result, append it to the response
+            let finalResponse = fullResponse;
+            if (specialActionResult) {
+              if (specialActionResult.success && specialActionResult.previewUrl) {
+                if (agent.type === 'development') {
+                  finalResponse = `${fullResponse}\n\n---\n\n## 🚀 Website Generated Successfully!\n\n**Project ID:** \`${specialActionResult.projectId}\`\n**Tech Stack:** ${specialActionResult.techStack}\n**Files Created:**\n${specialActionResult.files.map((f: string) => `- \`${f}\``).join('\n')}\n\n### 📺 Preview\n**[View Live Preview](${specialActionResult.previewUrl})**\n\n### 📥 Download\n**[Download Project Files](${specialActionResult.downloadUrl})**\n\nYou can view the live website in the preview link above, or download all project files using the download link.`;
+                } else if (agent.type === 'testing') {
+                  finalResponse = `${fullResponse}\n\n---\n\n## 🧪 Test Report Generated!\n\n**URL Tested:** ${specialActionResult.url}\n**Overall Score:** ${specialActionResult.summary?.overallScore || 'N/A'}/100\n**Tests Passed:** ${specialActionResult.summary?.passed || 0} | **Failed:** ${specialActionResult.summary?.failed || 0} | **Warnings:** ${specialActionResult.summary?.warnings || 0}\n\n### Category Scores\n${(specialActionResult.categories || []).map((c: any) => `- **${c.name}**: ${c.score}/100`).join('\n')}\n\n### 📺 View Report\n**[View Full Test Report](${specialActionResult.previewUrl})**\n\n### 📥 Download\n**[Download HTML Report](${specialActionResult.downloadUrl})** | **[Download JSON Data](${specialActionResult.jsonUrl})**\n\n### Recommendations\n${(specialActionResult.recommendations || []).map((r: string) => `- ${r}`).join('\n')}`;
+                }
+              }
+
+              // Send the action result suffix
+              const suffix = finalResponse.substring(fullResponse.length);
+              if (suffix) {
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'token', content: suffix })}\n\n`));
+              }
+            }
+
+            // Save the complete AI response
+            if (useDb) {
+              await db.chatMessage.create({
+                data: { role: 'agent', content: finalResponse, agentId }
+              });
+            } else {
+              memoryStore.createChatMessage({ role: 'agent', content: finalResponse, agentId });
+            }
+
+            // Send completion event with metadata
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+              type: 'done',
+              actionResult: specialActionResult || null,
+            })}\n\n`));
+
+          } catch (llmError: any) {
+            console.error('LLM stream failed, using fallback:', llmError?.message);
+
+            // Fallback to contextual response
+            const fallbackResponse = generateContextualResponse(
+              { id: agent.id, type: agent.type, name: agent.name, systemPrompt: agent.systemPrompt || '', capabilities: agent.capabilities || '' },
+              content
+            );
+
+            // Send fallback as tokens
+            for (let i = 0; i < fallbackResponse.length; i += 20) {
+              const chunk = fallbackResponse.substring(i, i + 20);
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'token', content: chunk })}\n\n`));
+            }
+
+            // Save fallback response
+            if (useDb) {
+              await db.chatMessage.create({ data: { role: 'agent', content: fallbackResponse, agentId } });
+            } else {
+              memoryStore.createChatMessage({ role: 'agent', content: fallbackResponse, agentId });
+            }
+
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done', actionResult: null })}\n\n`));
+          }
+
+          controller.close();
+        },
+      });
+
+      return new Response(stream, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+          'X-Accel-Buffering': 'no',
+        },
+      });
+    }
+
+    // NON-STREAMING FALLBACK (for older clients)
     let aiResponse: string;
     try {
       const zai = await getZAI();
@@ -201,24 +360,38 @@ export async function POST(req: NextRequest) {
       }
     } catch (llmError: any) {
       console.error('LLM call failed, using contextual fallback:', llmError?.message);
-      // Use intelligent contextual response generator instead of random one-liners
       aiResponse = generateContextualResponse(
         { id: agent.id, type: agent.type, name: agent.name, systemPrompt: agent.systemPrompt || '', capabilities: agent.capabilities || '' },
         content
       );
     }
 
-    // Save AI response
+    let finalResponse = aiResponse;
+    if (specialActionResult) {
+      if (specialActionResult.success && specialActionResult.previewUrl) {
+        if (agent.type === 'development') {
+          finalResponse = `${aiResponse}\n\n---\n\n## 🚀 Website Generated Successfully!\n\n**Project ID:** \`${specialActionResult.projectId}\`\n**Tech Stack:** ${specialActionResult.techStack}\n**Files Created:**\n${specialActionResult.files.map((f: string) => `- \`${f}\``).join('\n')}\n\n### 📺 Preview\n**[View Live Preview](${specialActionResult.previewUrl})**\n\n### 📥 Download\n**[Download Project Files](${specialActionResult.downloadUrl})**\n\nYou can view the live website in the preview link above, or download all project files using the download link.`;
+        } else if (agent.type === 'testing') {
+          finalResponse = `${aiResponse}\n\n---\n\n## 🧪 Test Report Generated!\n\n**URL Tested:** ${specialActionResult.url}\n**Overall Score:** ${specialActionResult.summary?.overallScore || 'N/A'}/100\n**Tests Passed:** ${specialActionResult.summary?.passed || 0} | **Failed:** ${specialActionResult.summary?.failed || 0} | **Warnings:** ${specialActionResult.summary?.warnings || 0}\n\n### Category Scores\n${(specialActionResult.categories || []).map((c: any) => `- **${c.name}**: ${c.score}/100`).join('\n')}\n\n### 📺 View Report\n**[View Full Test Report](${specialActionResult.previewUrl})**\n\n### 📥 Download\n**[Download HTML Report](${specialActionResult.downloadUrl})** | **[Download JSON Data](${specialActionResult.jsonUrl})**\n\n### Recommendations\n${(specialActionResult.recommendations || []).map((r: string) => `- ${r}`).join('\n')}`;
+        }
+      }
+    }
+
     let message: any;
     if (useDb) {
       message = await db.chatMessage.create({
-        data: { role: 'agent', content: aiResponse, agentId }
+        data: { role: 'agent', content: finalResponse, agentId }
       });
     } else {
-      message = memoryStore.createChatMessage({ role: 'agent', content: aiResponse, agentId });
+      message = memoryStore.createChatMessage({ role: 'agent', content: finalResponse, agentId });
     }
 
-    return NextResponse.json({ message });
+    const responseData: any = { message };
+    if (specialActionResult) {
+      responseData.actionResult = specialActionResult;
+    }
+
+    return NextResponse.json(responseData);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -241,13 +414,17 @@ export async function GET(req: NextRequest) {
           take: 100,
         });
         if (messages.length > 0) {
-          return NextResponse.json({ messages });
+          return NextResponse.json({ messages }, {
+            headers: { 'Cache-Control': 'private, max-age=5' },
+          });
         }
       } catch (e) {}
     }
 
     const messages = memoryStore.getChatMessages(agentId);
-    return NextResponse.json({ messages });
+    return NextResponse.json({ messages }, {
+      headers: { 'Cache-Control': 'private, max-age=5' },
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

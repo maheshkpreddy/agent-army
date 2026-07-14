@@ -71,3 +71,8 @@ download/
 # Workflow files
 .workflow-*.js
 .army-state.md
+# Database
+db/*.db
+
+# Agent Army downloads
+download/

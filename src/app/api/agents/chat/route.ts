@@ -9,63 +9,142 @@ try {
   }
 } catch (e) {}
 
-const RESPONSES: Record<string, string[]> = {
+// Lazy-loaded ZAI SDK instance (singleton per serverless cold start)
+let zaiInstance: any = null;
+async function getZAI() {
+  if (!zaiInstance) {
+    const ZAI = (await import('z-ai-web-dev-sdk')).default;
+    zaiInstance = await ZAI.create();
+  }
+  return zaiInstance;
+}
+
+// Enhanced system prompts for each agent type — designed for detailed, actionable responses
+const AGENT_SYSTEM_PROMPTS: Record<string, string> = {
+  'development': `You are DevAgent, a senior full-stack developer with 15+ years of experience across all major languages and frameworks. You write clean, performant, well-documented code. You follow best practices, design patterns, and security standards.
+
+IMPORTANT BEHAVIORS:
+- When asked to build something, provide COMPLETE, runnable code — not pseudocode or fragments
+- Include file structure, imports, error handling, and configuration
+- For multi-page websites: provide the full file tree, each page's code, routing, and styling
+- Always explain your architecture decisions and trade-offs
+- Include environment setup instructions when relevant
+- Write production-quality code with proper TypeScript types when applicable
+- Format code blocks with proper language tags (e.g. \`\`\`typescript, \`\`\`css)
+- When debugging, explain the root cause and provide the fix with context`,
+
+  'testing': `You are TestAgent, a QA engineer specializing in comprehensive test coverage. You write tests that catch real bugs, not just inflate coverage numbers.
+
+IMPORTANT BEHAVIORS:
+- Provide COMPLETE, runnable test code — not just descriptions of tests
+- Include test file structure, imports, setup/teardown, and assertions
+- Cover happy paths, edge cases, boundary conditions, and error states
+- For each test, explain WHAT it tests and WHY it matters
+- Provide test configuration (jest.config, vitest.config, etc.)
+- Include both unit and integration test strategies
+- Generate test data and fixtures when needed
+- Format code blocks with proper language tags`,
+
+  'business-analysis': `You are BAAgent, a senior business analyst with deep experience bridging business and technology. You ask the right questions to uncover real requirements.
+
+IMPORTANT BEHAVIORS:
+- Provide detailed, structured analysis documents — not just summaries
+- Create user stories with proper format: "As a [role], I want [feature], so that [benefit]"
+- Include acceptance criteria, priority rankings, and effort estimates
+- Map workflows with step-by-step process flows
+- Identify stakeholders, dependencies, risks, and assumptions
+- Create gap analysis with current state vs. desired state
+- Provide actionable recommendations with clear next steps
+- Use tables, lists, and structured formats for clarity`,
+
+  'sales': `You are SalesAgent, a top-performing sales strategist and operator. You understand that great sales is about solving customer problems.
+
+IMPORTANT BEHAVIORS:
+- Provide detailed sales strategies with specific actions and timelines
+- Write complete email templates, call scripts, and proposal frameworks
+- Include competitive positioning with specific differentiators
+- Create pipeline analysis with deal velocity metrics
+- Provide objection handling scripts with proven rebuttals
+- Generate proposal drafts with pricing strategies
+- Include market analysis and customer persona details
+- Always tie recommendations to measurable business outcomes`,
+
+  'implementation': `You are ImplAgent, an implementation specialist who ensures smooth project delivery. You plan for success but prepare for failure with rollback strategies.
+
+IMPORTANT BEHAVIORS:
+- Provide detailed implementation plans with phases, milestones, and timelines
+- Include complete deployment scripts, CI/CD configs, and infrastructure code
+- Create step-by-step runbooks with pre-flight checks and validation steps
+- Include rollback procedures and monitoring thresholds
+- Provide environment configuration (Docker, K8s, Terraform, etc.)
+- Include risk assessment and mitigation strategies
+- Create communication plans for stakeholders
+- Format technical content with proper code blocks and configuration examples`,
+
+  'data-analysis': `You are DataAgent, a senior data analyst and scientist. You turn raw data into actionable insights.
+
+IMPORTANT BEHAVIORS:
+- Provide complete analysis with methodology, findings, and recommendations
+- Write runnable Python/R code for data processing and visualization
+- Include statistical tests with p-values, confidence intervals, and effect sizes
+- Create visualization code (matplotlib, plotly, etc.) with clear explanations
+- Provide SQL queries for data extraction and transformation
+- Include data quality checks and anomaly detection approaches
+- Present findings in structured formats with executive summaries
+- Always state assumptions and limitations of the analysis`,
+
+  'system-admin': `You are SysAdminAgent, a veteran system administrator with deep expertise in cloud infrastructure, DevOps, and security.
+
+IMPORTANT BEHAVIORS:
+- Provide complete infrastructure-as-code (Terraform, CloudFormation, etc.)
+- Include runnable shell scripts for automation and monitoring
+- Create detailed incident response playbooks with step-by-step procedures
+- Provide security hardening checklists with specific configurations
+- Include monitoring and alerting configurations (Prometheus, Grafana, etc.)
+- Write Docker/Kubernetes manifests with resource limits and health checks
+- Include backup and disaster recovery procedures
+- Always explain the security and performance implications of recommendations`,
+
+  'support': `You are SupportAgent, a customer support specialist who genuinely cares about solving problems.
+
+IMPORTANT BEHAVIORS:
+- Provide step-by-step resolution guides with clear instructions
+- Include troubleshooting decision trees and flowcharts
+- Write knowledge base articles with proper formatting
+- Create FAQ documents organized by category
+- Provide response templates for common issues
+- Include escalation criteria and procedures
+- Suggest product improvements based on ticket patterns
+- Always consider the customer's perspective and emotional state`,
+};
+
+// Fallback responses if LLM fails
+const FALLBACK_RESPONSES: Record<string, string[]> = {
   'development': [
-    "I've analyzed the codebase and identified the key areas that need attention. Let me break this down into actionable steps with proper architecture considerations.",
-    "Looking at this from a development perspective, I recommend we follow the SOLID principles here. Here's my implementation plan with estimated complexity for each component.",
-    "Great question! Based on current best practices, I'd suggest we implement this using a clean architecture pattern. Let me outline the approach with specific file structures.",
-    "I've reviewed the requirements and can see several implementation paths. The most maintainable approach would be to start with the core domain logic.",
-    "After analyzing the technical constraints, here's my recommended stack and architecture with error handling from the start."
+    "I'd be happy to help with that development task! However, I'm currently experiencing a connectivity issue with my AI engine. Please try again in a moment, and I'll provide you with complete code and architecture recommendations.",
+    "I'm working on your request but hit a temporary processing issue. Let me try again — could you resend your message? I'll make sure to provide full code with proper structure and documentation.",
   ],
   'testing': [
-    "I've designed a comprehensive test strategy covering unit, integration, and E2E levels. Here's the test matrix with priority rankings.",
-    "Based on the risk assessment, here are the critical test paths we need to cover. I've identified 12 edge cases that could cause production issues.",
-    "Let me create a test plan that balances coverage with execution speed. Starting with happy paths, then covering boundary conditions.",
-    "I've identified several areas where test coverage is insufficient. Here's my prioritized testing roadmap.",
-    "For this feature, I recommend a risk-based testing approach focusing on high-risk areas first."
+    "I'd love to create comprehensive tests for you! I'm experiencing a brief connectivity issue. Please try again and I'll provide complete test suites with full coverage.",
   ],
   'business-analysis': [
-    "I've mapped the current business process and identified 3 key gaps. Here's my analysis with recommended solutions.",
-    "After analyzing stakeholder needs, I've created a requirements document with clear acceptance criteria.",
-    "I see conflicting requirements from different stakeholders. Let me propose a resolution framework.",
-    "Based on workflow analysis, I've identified optimizations that could reduce processing time by 40%.",
-    "I've conducted a gap analysis. Here are the critical changes needed, organized by business impact."
+    "I'm ready to analyze that for you! I'm experiencing a temporary processing delay. Please retry and I'll deliver a detailed analysis with requirements, user stories, and process maps.",
   ],
   'sales': [
-    "I've analyzed the deal and here's my competitive positioning strategy based on the prospect's pain points.",
-    "Looking at the pipeline data, I see opportunities to accelerate 3 deals in the qualification stage.",
-    "Based on the competitive landscape, I've developed objection handling plays for the top 5 concerns.",
-    "I've reviewed the proposal requirements. I suggest a value-based approach with tiered options.",
-    "Analyzing sales metrics, our win rate increases 35% with customer success stories in proposals."
+    "I'd be glad to help with your sales strategy! I'm briefly unavailable due to a processing issue. Please try again for detailed proposals, scripts, and pipeline analysis.",
   ],
   'implementation': [
-    "I've created a detailed implementation plan with phased rollout and complete milestone schedule.",
-    "For this deployment, I recommend a blue-green strategy with automated rollback triggers.",
-    "I've mapped all configuration dependencies and identified 2 that need updates before go-live.",
-    "Based on change impact assessment, I recommend staged rollout: 10% → 25% → 50% → 100%.",
-    "I've prepared the implementation checklist with 23 critical items, 5 blocking."
+    "I can help with that implementation plan! I'm experiencing a temporary connectivity issue. Please retry for complete deployment scripts, runbooks, and rollout strategies.",
   ],
   'data-analysis': [
-    "I've completed the statistical analysis and found 3 significant trends with a 23% QoQ increase.",
-    "After cleaning the dataset, I've identified several anomalies warranting investigation.",
-    "The predictive model shows 87% accuracy. Here are feature importance rankings.",
-    "I've created an interactive dashboard surfacing the 5 KPIs leadership cares about most.",
-    "Based on trend analysis, I project continued growth with a seasonal dip in Q3."
+    "I'm ready to analyze your data! I'm experiencing a brief processing delay. Please try again for complete analysis code, visualizations, and statistical findings.",
   ],
   'system-admin': [
-    "I've reviewed the infrastructure and identified 2 performance bottlenecks with remediation plans.",
-    "Monitoring shows elevated latency on the primary database. I recommend read replicas.",
-    "I've audited security configuration and found 3 findings needing immediate attention.",
-    "Based on capacity planning, we'll need to scale compute within 60 days.",
-    "I've created a disaster recovery runbook with RPO/RTO targets."
+    "I can assist with that infrastructure task! I'm having a temporary connectivity issue. Please retry for complete infrastructure configs, automation scripts, and security hardening.",
   ],
   'support': [
-    "I've triaged the issue — it's a configuration problem. Here's the step-by-step resolution.",
-    "Based on ticket patterns, a recurring issue affects 12% of users. I recommend a self-service FAQ.",
-    "Issue resolved. Root cause was a race condition in the authentication flow.",
-    "Looking at the issue history, there's an onboarding gap. Here's my training material update.",
-    "Escalation handled, service restored. SLA impact was minimal — 4 minutes of degraded performance."
-  ]
+    "I'd love to help resolve that issue! I'm experiencing a brief processing delay. Please try again for detailed troubleshooting steps, knowledge base articles, and resolution guides.",
+  ],
 };
 
 export async function POST(req: NextRequest) {
@@ -77,39 +156,86 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'agentId and content are required' }, { status: 400 });
     }
 
-    if (isVercel() || !db) {
-      // Use memory store
-      const agent = memoryStore.getAgentById(agentId);
+    // Get agent info — always try memory store as fallback
+    let agent: any = null;
+    let chatHistory: any[] = [];
+    let useDb = false;
+
+    if (!isVercel() && db) {
+      try {
+        agent = await db.agent.findUnique({ where: { id: agentId } });
+        if (agent) {
+          useDb = true;
+          await db.chatMessage.create({ data: { role: 'user', content, agentId } });
+          chatHistory = await db.chatMessage.findMany({
+            where: { agentId },
+            orderBy: { createdAt: 'asc' },
+            take: 20,
+          });
+        }
+      } catch (e) {
+        // Database error, fall through to memory store
+      }
+    }
+
+    if (!useDb) {
+      agent = memoryStore.getAgentById(agentId);
       if (!agent) {
         return NextResponse.json({ error: 'Agent not found' }, { status: 404 });
       }
-
+      // Save user message
       memoryStore.createChatMessage({ role: 'user', content, agentId });
-
-      const typeResponses = RESPONSES[agent.type] || RESPONSES['development'];
-      const response = typeResponses[Math.floor(Math.random() * typeResponses.length)];
-
-      const message = memoryStore.createChatMessage({ role: 'agent', content: response, agentId });
-
-      return NextResponse.json({ message });
+      // Get recent chat history for context (last 20 messages)
+      chatHistory = memoryStore.getChatMessages(agentId).slice(-20);
     }
 
-    // Use database
-    await db.chatMessage.create({
-      data: { role: 'user', content, agentId }
-    });
+    // Build LLM messages with system prompt + chat history
+    const systemPrompt = AGENT_SYSTEM_PROMPTS[agent.type] || AGENT_SYSTEM_PROMPTS['development'];
+    const messages = [
+      { role: 'assistant' as const, content: systemPrompt },
+    ];
 
-    const agent = await db.agent.findUnique({ where: { id: agentId } });
-    if (!agent) {
-      return NextResponse.json({ error: 'Agent not found' }, { status: 404 });
+    // Add chat history for context (skip if too many to fit)
+    for (const msg of chatHistory) {
+      messages.push({
+        role: msg.role === 'agent' ? 'assistant' as const : (msg.role as 'user' | 'assistant'),
+        content: msg.content,
+      });
     }
 
-    const typeResponses = RESPONSES[agent.type] || RESPONSES['development'];
-    const response = typeResponses[Math.floor(Math.random() * typeResponses.length)];
+    // Add the current user message (it's already in history, but ensure it's the last one)
+    // The history already includes the current message, so we're good
 
-    const message = await db.chatMessage.create({
-      data: { role: 'agent', content: response, agentId }
-    });
+    // Call the LLM
+    let aiResponse: string;
+    try {
+      const zai = await getZAI();
+      const completion = await zai.chat.completions.create({
+        messages,
+        stream: false,
+        thinking: { type: 'disabled' },
+      });
+      aiResponse = completion.choices?.[0]?.message?.content;
+
+      if (!aiResponse || aiResponse.trim().length === 0) {
+        throw new Error('Empty response from AI');
+      }
+    } catch (llmError: any) {
+      console.error('LLM call failed:', llmError?.message);
+      // Fallback to a helpful error response
+      const fallbacks = FALLBACK_RESPONSES[agent.type] || FALLBACK_RESPONSES['development'];
+      aiResponse = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+    }
+
+    // Save AI response
+    let message: any;
+    if (useDb) {
+      message = await db.chatMessage.create({
+        data: { role: 'agent', content: aiResponse, agentId }
+      });
+    } else {
+      message = memoryStore.createChatMessage({ role: 'agent', content: aiResponse, agentId });
+    }
 
     return NextResponse.json({ message });
   } catch (error: any) {
@@ -121,22 +247,25 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const agentId = url.searchParams.get('agentId');
-    
+
     if (!agentId) {
       return NextResponse.json({ error: 'agentId is required' }, { status: 400 });
     }
 
-    if (isVercel() || !db) {
-      const messages = memoryStore.getChatMessages(agentId);
-      return NextResponse.json({ messages });
+    if (!isVercel() && db) {
+      try {
+        const messages = await db.chatMessage.findMany({
+          where: { agentId },
+          orderBy: { createdAt: 'asc' },
+          take: 100,
+        });
+        if (messages.length > 0) {
+          return NextResponse.json({ messages });
+        }
+      } catch (e) {}
     }
 
-    const messages = await db.chatMessage.findMany({
-      where: { agentId },
-      orderBy: { createdAt: 'asc' },
-      take: 100,
-    });
-
+    const messages = memoryStore.getChatMessages(agentId);
     return NextResponse.json({ messages });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

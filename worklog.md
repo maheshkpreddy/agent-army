@@ -93,3 +93,29 @@ Stage Summary:
   - viewer@marq.ai / MARQ@viewer2024 (read-only all agents)
 - Pushed to GitHub: maheshkpreddy/agent-army
 - Vercel needs separate deployment (import from GitHub)
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Deploy MARQ AI Agent TRIBE to Vercel
+
+Work Log:
+- Verified Vercel API token
+- Created Vercel project "marq-ai-agent-tribe" via API
+- Set environment variables (NEXTAUTH_SECRET, NEXTAUTH_URL, DATABASE_URL)
+- Triggered production deployment from GitHub repo
+- Fixed SQLite incompatibility with Vercel serverless (read-only filesystem)
+- Created in-memory store (memory-store.ts) with all 8 agents and 6 users
+- Updated all API routes with Vercel detection and graceful fallback
+- Fixed middleware to allow API routes through
+- Fixed auth to use simple credential check on Vercel
+- Multiple deployments and testing cycles
+- Final deployment: all APIs working, 8 agents live, 6 users available
+
+Stage Summary:
+- Production URL: https://marq-ai-agent-tribe.vercel.app
+- Login page: Working
+- Agents API: 8 agents available
+- Users/Seed API: 6 roles available
+- GitHub: maheshkpreddy/agent-army (pushed)
+- Vercel project: prj_sN0luN1NkuUm9bMba17QCgxRccKK

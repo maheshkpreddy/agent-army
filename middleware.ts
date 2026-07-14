@@ -13,6 +13,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // API routes - let them through, the client handles auth
+  // The client-side session check redirects unauthenticated users
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.next();
+  }
+
   // Static assets and Next.js internals
   if (
     pathname.startsWith('/_next') ||

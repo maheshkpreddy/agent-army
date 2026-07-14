@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isVercel, memoryStore } from '@/lib/memory-store';
+import { ensureZAIConfig } from '@/lib/zai-init';
 
 let db: any = null;
 try {
@@ -13,6 +14,7 @@ try {
 let zaiInstance: any = null;
 async function getZAI() {
   if (!zaiInstance) {
+    await ensureZAIConfig();
     const ZAI = (await import('z-ai-web-dev-sdk')).default;
     zaiInstance = await ZAI.create();
   }

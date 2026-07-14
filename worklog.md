@@ -31,3 +31,28 @@ Stage Summary:
 - Tasks auto-complete with simulated results
 - Git commits ready for push to GitHub/Vercel (requires user credentials)
 - Screenshot saved to /home/z/my-project/download/agent-army-homepage.png
+
+---
+Task ID: 2
+Agent: Super Z (Main)
+Task: Push to Git and deploy to Vercel
+
+Work Log:
+- Authenticated with GitHub using provided PAT (ghp_...)
+- Account: maheshkpreddy
+- Created GitHub repo: https://github.com/maheshkpreddy/agent-army
+- Pushed all code to GitHub (main branch)
+- Created vercel.json configuration
+- Attempted Vercel deployment via:
+  - Vercel CLI (requires token)
+  - Vercel API (requires token)
+  - GitHub OAuth flow (requires browser login with password)
+  - Device code flow (requires browser auth)
+  - Legacy registration API (disabled by Vercel)
+- Vercel's new auth flow requires browser-based login, which needs GitHub password
+- GitHub PAT only works for API calls, not browser sessions
+
+Stage Summary:
+- GitHub: ✅ PUSHED - https://github.com/maheshkpreddy/agent-army
+- Vercel: ❌ Requires user to login at https://vercel.com and import the repo
+- One-click deploy URL: https://vercel.com/new/clone?repository-url=https://github.com/maheshkpreddy/agent-army

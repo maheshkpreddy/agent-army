@@ -1,7 +1,25 @@
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import { db } from './db';
+import { isVercel, memoryStore } from './memory-store';
+
+let db: any = null;
+try {
+  if (!isVercel()) {
+    const { db: prismaDb } = require('@/lib/db');
+    db = prismaDb;
+  }
+} catch (e) {}
+
+// Simple credentials for Vercel (in-memory mode)
+const SIMPLE_CREDENTIALS: Record<string, { password: string; name: string; role: string; avatar: string; department: string }> = {
+  'admin@marq.ai': { password: 'MARQ@admin2024', name: 'MARQ Admin', role: 'admin', avatar: '👑', department: 'Executive' },
+  'manager@marq.ai': { password: 'MARQ@manager2024', name: 'Sarah Mitchell', role: 'manager', avatar: '📋', department: 'Operations' },
+  'developer@marq.ai': { password: 'MARQ@dev2024', name: 'Alex Chen', role: 'developer', avatar: '💻', department: 'Engineering' },
+  'analyst@marq.ai': { password: 'MARQ@analyst2024', name: 'Priya Sharma', role: 'analyst', avatar: '📊', department: 'Analytics' },
+  'operator@marq.ai': { password: 'MARQ@operator2024', name: 'James Rodriguez', role: 'operator', avatar: '🔧', department: 'Infrastructure' },
+  'viewer@marq.ai': { password: 'MARQ@viewer2024', name: 'Emily Watson', role: 'viewer', avatar: '👁️', department: 'Stakeholder' },
+};
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -16,39 +34,75 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Email and password are required');
         }
 
-        const user = await db.user.findUnique({
-          where: { email: credentials.email },
-        });
+        // Vercel mode: simple credential check
+        if (isVercel() || !db) {
+          const cred = SIMPLE_CREDENTIALS[credentials.email];
+          if (!cred || cred.password !== credentials.password) {
+            throw new Error('Invalid credentials');
+          }
 
-        if (!user || !user.isActive) {
-          throw new Error('Invalid credentials or account disabled');
+          return {
+            id: `user_${credentials.email.split('@')[0]}`,
+            email: credentials.email,
+            name: cred.name,
+            role: cred.role,
+            avatar: cred.avatar,
+            department: cred.department,
+          };
         }
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) {
-          throw new Error('Invalid credentials');
+        // Database mode
+        try {
+          const user = await db.user.findUnique({
+            where: { email: credentials.email },
+          });
+
+          if (!user || !user.isActive) {
+            throw new Error('Invalid credentials or account disabled');
+          }
+
+          const isValid = await bcrypt.compare(credentials.password, user.password);
+          if (!isValid) {
+            throw new Error('Invalid credentials');
+          }
+
+          await db.user.update({
+            where: { id: user.id },
+            data: { lastLogin: new Date() },
+          });
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            avatar: user.avatar,
+            department: user.department,
+          };
+        } catch (error: any) {
+          if (error.message === 'Invalid credentials' || error.message === 'Invalid credentials or account disabled') {
+            throw error;
+          }
+          // Fallback to simple credentials if DB fails
+          const cred = SIMPLE_CREDENTIALS[credentials.email];
+          if (!cred || cred.password !== credentials.password) {
+            throw new Error('Invalid credentials');
+          }
+          return {
+            id: `user_${credentials.email.split('@')[0]}`,
+            email: credentials.email,
+            name: cred.name,
+            role: cred.role,
+            avatar: cred.avatar,
+            department: cred.department,
+          };
         }
-
-        // Update last login
-        await db.user.update({
-          where: { id: user.id },
-          data: { lastLogin: new Date() },
-        });
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          avatar: user.avatar,
-          department: user.department,
-        };
       },
     }),
   ],
   session: {
     strategy: 'jwt',
-    maxAge: 24 * 60 * 60, // 24 hours
+    maxAge: 24 * 60 * 60,
   },
   callbacks: {
     async jwt({ token, user }) {

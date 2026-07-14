@@ -1,5 +1,16 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { isVercel, memoryStore } from '@/lib/memory-store';
+
+// Only import db if not on Vercel
+let db: any = null;
+try {
+  if (!isVercel()) {
+    const { db: prismaDb } = require('@/lib/db');
+    db = prismaDb;
+  }
+} catch (e) {
+  // Database not available, use memory store
+}
 
 const AGENT_DEFINITIONS = [
   {
@@ -30,7 +41,7 @@ const AGENT_DEFINITIONS = [
     avatar: '📊',
     color: '#F59E0B',
     capabilities: 'requirements-gathering,process-mapping,stakeholder-management,spec-writing,workflow-analysis,gap-analysis,impact-assessment,user-stories,acceptance-criteria',
-    systemPrompt: 'You are BAAgent, a senior business analyst with deep experience bridging business and technology. You ask the right questions to uncover real requirements, not just stated ones. You create clear, actionable specifications that developers love. You think about edge cases and business implications before they become problems.'
+    systemPrompt: 'You are BAAgent, a senior business analyst with deep experience bridging business and technology. You ask the right questions to uncover real requirements, not just stated ones. You create clear, actionable specifications that developers love.'
   },
   {
     name: 'SalesAgent',
@@ -40,7 +51,7 @@ const AGENT_DEFINITIONS = [
     avatar: '🎯',
     color: '#EF4444',
     capabilities: 'lead-qualification,pipeline-management,proposal-writing,deal-strategy,crm-ops,sales-forecasting,competitive-analysis,objection-handling,closing-strategy',
-    systemPrompt: 'You are SalesAgent, a top-performing sales strategist and operator. You understand that great sales is about solving customer problems, not pushing products. You create compelling proposals that address real pain points. You manage pipelines systematically and forecast accurately. You know when to push and when to listen.'
+    systemPrompt: 'You are SalesAgent, a top-performing sales strategist and operator. You understand that great sales is about solving customer problems, not pushing products.'
   },
   {
     name: 'ImplAgent',
@@ -50,7 +61,7 @@ const AGENT_DEFINITIONS = [
     avatar: '🚀',
     color: '#06B6D4',
     capabilities: 'project-delivery,deployment-management,configuration,change-management,rollout-strategy,migration,go-live-planning,rollback-planning,environment-setup',
-    systemPrompt: 'You are ImplAgent, an implementation specialist who ensures smooth project delivery. You plan for success but prepare for failure with rollback strategies. You manage stakeholder expectations and communication throughout the process. You understand that implementation is 80% people and 20% technology.'
+    systemPrompt: 'You are ImplAgent, an implementation specialist who ensures smooth project delivery. You plan for success but prepare for failure with rollback strategies.'
   },
   {
     name: 'DataAgent',
@@ -60,7 +71,7 @@ const AGENT_DEFINITIONS = [
     avatar: '📈',
     color: '#3B82F6',
     capabilities: 'statistical-analysis,data-visualization,etl-pipelines,business-intelligence,predictive-modeling,data-cleaning,report-generation,trend-analysis,anomaly-detection',
-    systemPrompt: 'You are DataAgent, a senior data analyst and scientist. You turn raw data into actionable insights. You choose the right analysis methods for the question at hand. You create visualizations that tell clear stories, not just display numbers. You always question data quality and assumptions. You communicate findings in business-friendly language.'
+    systemPrompt: 'You are DataAgent, a senior data analyst and scientist. You turn raw data into actionable insights. You create visualizations that tell clear stories.'
   },
   {
     name: 'SysAdminAgent',
@@ -70,7 +81,7 @@ const AGENT_DEFINITIONS = [
     avatar: '🛡️',
     color: '#64748B',
     capabilities: 'infrastructure-management,monitoring,incident-response,devops,security-ops,cloud-management,backup-recovery,performance-tuning,capacity-planning',
-    systemPrompt: 'You are SysAdminAgent, a veteran system administrator with deep expertise in cloud infrastructure, DevOps, and security. You automate everything that can be automated. You monitor proactively, not reactively. You follow the principle of least privilege and defense in depth. You document runbooks and create self-healing systems.'
+    systemPrompt: 'You are SysAdminAgent, a veteran system administrator with deep expertise in cloud infrastructure, DevOps, and security. You automate everything that can be automated.'
   },
   {
     name: 'SupportAgent',
@@ -80,12 +91,25 @@ const AGENT_DEFINITIONS = [
     avatar: '🎧',
     color: '#EC4899',
     capabilities: 'ticket-resolution,escalation-management,knowledge-base,customer-satisfaction,sla-management,triage,root-cause-analysis,training-materials,process-improvement',
-    systemPrompt: 'You are SupportAgent, a customer support specialist who genuinely cares about solving problems. You respond quickly, communicate clearly, and follow up thoroughly. You know when to escalate and provide detailed context to engineers. You create knowledge base articles that prevent future tickets. You measure success by customer satisfaction, not ticket closure rate.'
+    systemPrompt: 'You are SupportAgent, a customer support specialist who genuinely cares about solving problems. You respond quickly, communicate clearly, and follow up thoroughly.'
   }
 ];
 
 export async function GET() {
   try {
+    if (isVercel() || !db) {
+      // Use memory store
+      const agents = memoryStore.getAgents();
+      return NextResponse.json({
+        agents: agents.map(agent => ({
+          ...agent,
+          tasks: memoryStore.getActiveTasks(agent.id),
+          _count: { tasks: memoryStore.getActiveTasks(agent.id).length }
+        }))
+      });
+    }
+
+    // Use database
     const existing = await db.agent.count();
     
     if (existing === 0) {
@@ -119,6 +143,14 @@ export async function GET() {
 
     return NextResponse.json({ agents });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    // Fallback to memory store on any error
+    const agents = memoryStore.getAgents();
+    return NextResponse.json({
+      agents: agents.map(agent => ({
+        ...agent,
+        tasks: memoryStore.getActiveTasks(agent.id),
+        _count: { tasks: memoryStore.getActiveTasks(agent.id).length }
+      }))
+    });
   }
 }

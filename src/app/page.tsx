@@ -8,7 +8,8 @@ import {
   AlertCircle, Loader2, ChevronRight, Sparkles, Zap, Users,
   ArrowRight, Play, MessageSquare, ListTodo, X, Terminal,
   Server, Database, Wrench, Bug, FileText, GitBranch,
-  MonitorSmartphone, RefreshCw
+  MonitorSmartphone, RefreshCw, LogOut, Lock, Eye, UserCog,
+  Crown, ShieldCheck, BarChart2, WrenchIcon, EyeIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -57,131 +58,212 @@ interface ChatMessage {
   createdAt: string;
 }
 
-// Agent type config
-const TYPE_CONFIG: Record<string, { icon: React.ReactNode; gradient: string; bgClass: string; label: string }> = {
-  'development': { icon: <Code2 className="h-5 w-5" />, gradient: 'from-emerald-500 to-teal-600', bgClass: 'bg-emerald-500/10 border-emerald-500/20', label: 'Development' },
-  'testing': { icon: <TestTube2 className="h-5 w-5" />, gradient: 'from-violet-500 to-purple-600', bgClass: 'bg-violet-500/10 border-violet-500/20', label: 'Testing' },
-  'business-analysis': { icon: <BarChart3 className="h-5 w-5" />, gradient: 'from-amber-500 to-orange-600', bgClass: 'bg-amber-500/10 border-amber-500/20', label: 'Business Analysis' },
-  'sales': { icon: <Target className="h-5 w-5" />, gradient: 'from-red-500 to-rose-600', bgClass: 'bg-red-500/10 border-red-500/20', label: 'Sales' },
-  'implementation': { icon: <Rocket className="h-5 w-5" />, gradient: 'from-cyan-500 to-blue-600', bgClass: 'bg-cyan-500/10 border-cyan-500/20', label: 'Implementation' },
-  'data-analysis': { icon: <TrendingUp className="h-5 w-5" />, gradient: 'from-blue-500 to-indigo-600', bgClass: 'bg-blue-500/10 border-blue-500/20', label: 'Data Analysis' },
-  'system-admin': { icon: <Shield className="h-5 w-5" />, gradient: 'from-slate-500 to-gray-600', bgClass: 'bg-slate-500/10 border-slate-500/20', label: 'System Admin' },
-  'support': { icon: <Headphones className="h-5 w-5" />, gradient: 'from-pink-500 to-rose-600', bgClass: 'bg-pink-500/10 border-pink-500/20', label: 'Support' },
+interface UserInfo {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  avatar: string;
+  department: string;
+}
+
+// Role configuration
+const ROLE_AGENT_ACCESS: Record<string, string[]> = {
+  admin: ['development', 'testing', 'business-analysis', 'sales', 'implementation', 'data-analysis', 'system-admin', 'support'],
+  manager: ['development', 'testing', 'business-analysis', 'sales', 'implementation', 'data-analysis', 'system-admin', 'support'],
+  developer: ['development', 'testing', 'data-analysis'],
+  analyst: ['business-analysis', 'data-analysis', 'sales'],
+  operator: ['implementation', 'system-admin', 'support'],
+  viewer: ['development', 'testing', 'business-analysis', 'sales', 'implementation', 'data-analysis', 'system-admin', 'support'],
 };
 
-const STATUS_CONFIG: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
-  'idle': { icon: <CheckCircle2 className="h-3.5 w-3.5" />, color: 'text-emerald-500', label: 'Ready' },
-  'busy': { icon: <Loader2 className="h-3.5 w-3.5 animate-spin" />, color: 'text-amber-500', label: 'Working' },
-  'error': { icon: <AlertCircle className="h-3.5 w-3.5" />, color: 'text-red-500', label: 'Error' },
+const ROLE_PERMISSIONS: Record<string, {
+  canChat: boolean;
+  canAssignTasks: boolean;
+  canManageUsers: boolean;
+  canViewAnalytics: boolean;
+  canConfigureAgents: boolean;
+}> = {
+  admin: { canChat: true, canAssignTasks: true, canManageUsers: true, canViewAnalytics: true, canConfigureAgents: true },
+  manager: { canChat: true, canAssignTasks: true, canManageUsers: false, canViewAnalytics: true, canConfigureAgents: false },
+  developer: { canChat: true, canAssignTasks: true, canManageUsers: false, canViewAnalytics: false, canConfigureAgents: false },
+  analyst: { canChat: true, canAssignTasks: true, canManageUsers: false, canViewAnalytics: true, canConfigureAgents: false },
+  operator: { canChat: true, canAssignTasks: true, canManageUsers: false, canViewAnalytics: false, canConfigureAgents: false },
+  viewer: { canChat: false, canAssignTasks: false, canManageUsers: false, canViewAnalytics: false, canConfigureAgents: false },
+};
+
+const ROLE_LABELS: Record<string, string> = {
+  admin: 'Administrator',
+  manager: 'Manager',
+  developer: 'Developer',
+  analyst: 'Analyst',
+  operator: 'Operator',
+  viewer: 'Viewer',
+};
+
+const ROLE_COLORS: Record<string, string> = {
+  admin: '#EF4444',
+  manager: '#F59E0B',
+  developer: '#10B981',
+  analyst: '#3B82F6',
+  operator: '#06B6D4',
+  viewer: '#64748B',
+};
+
+const ROLE_ICONS: Record<string, React.ReactNode> = {
+  admin: <Crown className="w-3.5 h-3.5" />,
+  manager: <ShieldCheck className="w-3.5 h-3.5" />,
+  developer: <Code2 className="w-3.5 h-3.5" />,
+  analyst: <BarChart2 className="w-3.5 h-3.5" />,
+  operator: <Wrench className="w-3.5 h-3.5" />,
+  viewer: <Eye className="w-3.5 h-3.5" />,
+};
+
+// Agent type config
+const TYPE_CONFIG: Record<string, { icon: React.ReactNode; gradient: string; label: string }> = {
+  'development': { icon: <Code2 className="w-5 h-5" />, gradient: 'from-emerald-500 to-green-600', label: 'Development' },
+  'testing': { icon: <TestTube2 className="w-5 h-5" />, gradient: 'from-violet-500 to-purple-600', label: 'Testing' },
+  'business-analysis': { icon: <BarChart3 className="w-5 h-5" />, gradient: 'from-amber-500 to-yellow-600', label: 'Business Analysis' },
+  'sales': { icon: <Target className="w-5 h-5" />, gradient: 'from-red-500 to-rose-600', label: 'Sales' },
+  'implementation': { icon: <Rocket className="w-5 h-5" />, gradient: 'from-cyan-500 to-teal-600', label: 'Implementation' },
+  'data-analysis': { icon: <TrendingUp className="w-5 h-5" />, gradient: 'from-blue-500 to-indigo-600', label: 'Data Analysis' },
+  'system-admin': { icon: <Shield className="w-5 h-5" />, gradient: 'from-slate-500 to-gray-600', label: 'System Admin' },
+  'support': { icon: <Headphones className="w-5 h-5" />, gradient: 'from-pink-500 to-rose-600', label: 'Support' },
+};
+
+const STATUS_CONFIG: Record<string, { color: string; label: string; icon: React.ReactNode }> = {
+  idle: { color: 'bg-emerald-500', label: 'Ready', icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+  busy: { color: 'bg-amber-500', label: 'Working', icon: <Activity className="w-3.5 h-3.5" /> },
+  error: { color: 'bg-red-500', label: 'Error', icon: <AlertCircle className="w-3.5 h-3.5" /> },
 };
 
 const PRIORITY_CONFIG: Record<string, { color: string; label: string }> = {
-  'low': { color: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300', label: 'Low' },
-  'medium': { color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300', label: 'Medium' },
-  'high': { color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300', label: 'High' },
-  'critical': { color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300', label: 'Critical' },
+  low: { color: 'bg-slate-500', label: 'Low' },
+  medium: { color: 'bg-blue-500', label: 'Medium' },
+  high: { color: 'bg-amber-500', label: 'High' },
+  critical: { color: 'bg-red-500', label: 'Critical' },
 };
 
-export default function AgentArmyPage() {
+export default function MARQAIAgentTRIBE() {
   const [agents, setAgents] = useState<Agent[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
-  const [chatLoading, setChatLoading] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDesc, setTaskDesc] = useState('');
   const [taskPriority, setTaskPriority] = useState('medium');
-  const [taskSubmitting, setTaskSubmitting] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [taskLoading, setTaskLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('chat');
+  const [user, setUser] = useState<UserInfo | null>(null);
+  const [userLoading, setUserLoading] = useState(true);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Fetch agents
+  const fetchSession = useCallback(async () => {
+    try {
+      const res = await fetch('/api/auth/session');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.authenticated && data.user) {
+          setUser(data.user);
+        } else {
+          window.location.href = '/auth/login';
+        }
+      } else {
+        window.location.href = '/auth/login';
+      }
+    } catch {
+      window.location.href = '/auth/login';
+    } finally {
+      setUserLoading(false);
+    }
+  }, []);
+
   const fetchAgents = useCallback(async () => {
     try {
       const res = await fetch('/api/agents');
-      const data = await res.json();
-      if (data.agents) {
+      if (res.ok) {
+        const data = await res.json();
         setAgents(data.agents);
-        // Update selected agent if it exists
-        if (selectedAgent) {
-          const updated = data.agents.find((a: Agent) => a.id === selectedAgent.id);
-          if (updated) setSelectedAgent(updated);
-        }
       }
-    } catch (err) {
-      console.error('Failed to fetch agents:', err);
+    } catch (error) {
+      console.error('Failed to fetch agents:', error);
     } finally {
       setLoading(false);
     }
-  }, [selectedAgent]);
-
-  // Fetch chat messages
-  const fetchChat = useCallback(async (agentId: string) => {
-    try {
-      const res = await fetch(`/api/agents/chat?agentId=${agentId}`);
-      const data = await res.json();
-      if (data.messages) setChatMessages(data.messages);
-    } catch (err) {
-      console.error('Failed to fetch chat:', err);
-    }
   }, []);
 
-  // Fetch tasks
   const fetchTasks = useCallback(async () => {
     try {
       const res = await fetch('/api/agents/tasks');
-      const data = await res.json();
-      if (data.tasks) setTasks(data.tasks);
-    } catch (err) {
-      console.error('Failed to fetch tasks:', err);
+      if (res.ok) {
+        const data = await res.json();
+        setTasks(data.tasks);
+      }
+    } catch (error) {
+      console.error('Failed to fetch tasks:', error);
     }
   }, []);
 
-  // Initial load
-  useEffect(() => {
-    fetchAgents();
-    fetchTasks();
-  }, [fetchAgents, fetchTasks]);
+  const fetchChat = useCallback(async (agentId: string) => {
+    try {
+      const res = await fetch(`/api/agents/chat?agentId=${agentId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setChatMessages(data.messages);
+      }
+    } catch (error) {
+      console.error('Failed to fetch chat:', error);
+    }
+  }, []);
 
-  // Auto-refresh
   useEffect(() => {
-    const interval = setInterval(() => {
+    fetchSession();
+  }, [fetchSession]);
+
+  useEffect(() => {
+    if (user) {
       fetchAgents();
       fetchTasks();
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [fetchAgents, fetchTasks]);
+      const interval = setInterval(() => {
+        fetchAgents();
+        fetchTasks();
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [user, fetchAgents, fetchTasks]);
 
-  // Scroll chat to bottom
+  useEffect(() => {
+    if (selectedAgent) {
+      fetchChat(selectedAgent.id);
+    }
+  }, [selectedAgent, fetchChat]);
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  // Select agent
-  const handleSelectAgent = useCallback((agent: Agent) => {
-    setSelectedAgent(agent);
-    setActiveTab('chat');
-    fetchChat(agent.id);
-  }, [fetchChat]);
+  const handleSendChat = async () => {
+    if (!chatInput.trim() || !selectedAgent || !user) return;
+    const perms = ROLE_PERMISSIONS[user.role];
+    if (!perms.canChat) {
+      toast.error('Access Denied', { description: 'Your role does not permit chat access' });
+      return;
+    }
 
-  // Send chat message
-  const handleSendChat = useCallback(async () => {
-    if (!chatInput.trim() || !selectedAgent || chatLoading) return;
     const msg = chatInput.trim();
     setChatInput('');
     setChatLoading(true);
 
-    // Optimistic UI
-    const tempUserMsg: ChatMessage = {
-      id: `temp-${Date.now()}`,
+    setChatMessages(prev => [...prev, {
+      id: 'temp-' + Date.now(),
       role: 'user',
       content: msg,
       agentId: selectedAgent.id,
       createdAt: new Date().toISOString(),
-    };
-    setChatMessages(prev => [...prev, tempUserMsg]);
+    }]);
 
     try {
       const res = await fetch('/api/agents/chat', {
@@ -189,267 +271,361 @@ export default function AgentArmyPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ agentId: selectedAgent.id, content: msg }),
       });
-      const data = await res.json();
-      if (data.message) {
+      if (res.ok) {
+        const data = await res.json();
         setChatMessages(prev => [...prev, data.message]);
       }
-    } catch (err) {
+    } catch (error) {
       toast.error('Failed to send message');
     } finally {
       setChatLoading(false);
     }
-  }, [chatInput, selectedAgent, chatLoading]);
+  };
 
-  // Assign task
-  const handleAssignTask = useCallback(async () => {
-    if (!taskTitle.trim() || !selectedAgent || taskSubmitting) return;
-    setTaskSubmitting(true);
+  const handleAssignTask = async () => {
+    if (!taskTitle.trim() || !selectedAgent || !user) return;
+    const perms = ROLE_PERMISSIONS[user.role];
+    if (!perms.canAssignTasks) {
+      toast.error('Access Denied', { description: 'Your role does not permit task assignment' });
+      return;
+    }
+
+    setTaskLoading(true);
     try {
       const res = await fetch('/api/agents/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           agentId: selectedAgent.id,
-          title: taskTitle.trim(),
-          description: taskDesc.trim(),
+          title: taskTitle,
+          description: taskDesc,
           priority: taskPriority,
         }),
       });
-      const data = await res.json();
-      if (data.task) {
-        toast.success(`Task assigned to ${selectedAgent.name}!`);
+      if (res.ok) {
+        toast.success(`Task assigned to ${selectedAgent.name}`, {
+          description: 'The agent will start working on it immediately.',
+        });
         setTaskTitle('');
         setTaskDesc('');
         setTaskPriority('medium');
         fetchAgents();
         fetchTasks();
       }
-    } catch (err) {
+    } catch (error) {
       toast.error('Failed to assign task');
     } finally {
-      setTaskSubmitting(false);
+      setTaskLoading(false);
     }
-  }, [taskTitle, taskDesc, taskPriority, selectedAgent, taskSubmitting, fetchAgents, fetchTasks]);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/callback/credentials', { method: 'POST' });
+    } catch {}
+    // Clear session by redirecting to sign out
+    window.location.href = '/api/auth/signout?callbackUrl=/auth/login';
+  };
+
+  const handleSelectAgent = (agent: Agent) => {
+    if (!user) return;
+    const allowedTypes = ROLE_AGENT_ACCESS[user.role] || [];
+    if (!allowedTypes.includes(agent.type)) {
+      toast.error('Access Restricted', {
+        description: `Your ${ROLE_LABELS[user.role]} role does not have access to ${TYPE_CONFIG[agent.type]?.label || agent.type} agents`,
+      });
+      return;
+    }
+    setSelectedAgent(agent);
+    setActiveTab('chat');
+  };
+
+  // Filter agents based on role
+  const getAccessibleAgents = () => {
+    if (!user) return [];
+    const allowedTypes = ROLE_AGENT_ACCESS[user.role] || [];
+    return agents.filter(a => allowedTypes.includes(a.type));
+  };
+
+  const getRestrictedAgents = () => {
+    if (!user) return [];
+    const allowedTypes = ROLE_AGENT_ACCESS[user.role] || [];
+    return agents.filter(a => !allowedTypes.includes(a.type));
+  };
+
+  const accessibleAgents = getAccessibleAgents();
+  const restrictedAgents = getRestrictedAgents();
+  const permissions = user ? ROLE_PERMISSIONS[user.role] : null;
 
   // Stats
-  const totalTasksCompleted = agents.reduce((sum, a) => sum + a.tasksCompleted, 0);
-  const busyAgents = agents.filter(a => a.status === 'busy').length;
-  const idleAgents = agents.filter(a => a.status === 'idle').length;
+  const totalAgents = agents.length;
+  const activeAgents = agents.filter(a => a.status === 'busy').length;
+  const completedTasks = tasks.filter(t => t.status === 'completed').length;
+  const pendingTasks = tasks.filter(t => t.status === 'running' || t.status === 'pending').length;
 
-  if (loading) {
+  // Loading state
+  if (userLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-teal-950 flex items-center justify-center">
         <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-          className="h-12 w-12 rounded-full border-4 border-primary border-t-transparent"
-        />
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center space-y-4"
+        >
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center animate-pulse">
+            <Bot className="w-8 h-8 text-white" />
+          </div>
+          <p className="text-slate-400 text-sm">Loading MARQ AI Agent TRIBE...</p>
+        </motion.div>
       </div>
     );
   }
 
+  if (!user) return null;
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-teal-950">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <header className="border-b border-white/10 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-3">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                  <Zap className="h-5 w-5 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
+                <Bot className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold tracking-tight">Agent Army</h1>
-                <p className="text-xs text-muted-foreground">Your AI workforce, deployed and ready</p>
+                <h1 className="text-lg font-bold text-white leading-tight">
+                  MARQ <span className="text-teal-400">AI</span> <span className="text-cyan-300">Agent TRIBE</span>
+                </h1>
+                <p className="text-[10px] text-slate-500 uppercase tracking-widest">AI Workforce Platform</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-3">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-                        <span className="text-sm font-medium text-emerald-700 dark:text-emerald-400">{idleAgents} Ready</span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>Agents available for work</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                        <Activity className="h-3.5 w-3.5 text-amber-500" />
-                        <span className="text-sm font-medium text-amber-700 dark:text-amber-400">{busyAgents} Active</span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>Agents currently working</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20">
-                        <ListTodo className="h-3.5 w-3.5 text-primary" />
-                        <span className="text-sm font-medium text-primary">{totalTasksCompleted} Done</span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>Total tasks completed</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+
+            <div className="flex items-center gap-3">
+              {/* Stats badges */}
+              <div className="hidden md:flex items-center gap-2">
+                <Badge variant="outline" className="bg-teal-500/10 border-teal-500/30 text-teal-400 text-xs">
+                  <Zap className="w-3 h-3 mr-1" /> {activeAgents} Active
+                </Badge>
+                <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-400 text-xs">
+                  <CheckCircle2 className="w-3 h-3 mr-1" /> {completedTasks} Done
+                </Badge>
+                <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-400 text-xs">
+                  <Clock className="w-3 h-3 mr-1" /> {pendingTasks} Pending
+                </Badge>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => { fetchAgents(); fetchTasks(); }}
-                className="gap-1.5"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                Refresh
-              </Button>
+
+              <Separator orientation="vertical" className="h-8 hidden md:block" />
+
+              {/* User info */}
+              <div className="flex items-center gap-2">
+                <div className="text-right hidden sm:block">
+                  <p className="text-sm font-medium text-white">{user.name}</p>
+                  <div className="flex items-center gap-1 justify-end">
+                    <span style={{ color: ROLE_COLORS[user.role] }}>
+                      {ROLE_ICONS[user.role]}
+                    </span>
+                    <span className="text-xs" style={{ color: ROLE_COLORS[user.role] }}>
+                      {ROLE_LABELS[user.role]}
+                    </span>
+                  </div>
+                </div>
+                <div
+                  className="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
+                  style={{ background: `${ROLE_COLORS[user.role]}20`, border: `1px solid ${ROLE_COLORS[user.role]}40` }}
+                >
+                  {user.avatar || '👤'}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="text-slate-400 hover:text-red-400 hover:bg-red-500/10"
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Main Content */}
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6 space-y-6">
         {/* Hero Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+          className="grid grid-cols-2 md:grid-cols-4 gap-4"
         >
-          <Card className="border-0 bg-gradient-to-br from-emerald-500/10 to-teal-500/5">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Agents</p>
-                  <p className="text-2xl font-bold">{agents.length}</p>
-                </div>
-                <Users className="h-8 w-8 text-emerald-500/50" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-0 bg-gradient-to-br from-amber-500/10 to-orange-500/5">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Active Now</p>
-                  <p className="text-2xl font-bold">{busyAgents}</p>
-                </div>
-                <Activity className="h-8 w-8 text-amber-500/50" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/5">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Tasks Completed</p>
-                  <p className="text-2xl font-bold">{totalTasksCompleted}</p>
-                </div>
-                <CheckCircle2 className="h-8 w-8 text-blue-500/50" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-0 bg-gradient-to-br from-violet-500/10 to-purple-500/5">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Pending Tasks</p>
-                  <p className="text-2xl font-bold">{tasks.filter(t => t.status === 'running' || t.status === 'pending').length}</p>
-                </div>
-                <Clock className="h-8 w-8 text-violet-500/50" />
-              </div>
-            </CardContent>
-          </Card>
+          {[
+            { label: 'Total Agents', value: totalAgents, icon: Bot, color: 'from-teal-500 to-cyan-500' },
+            { label: 'Active Now', value: activeAgents, icon: Activity, color: 'from-amber-500 to-yellow-500' },
+            { label: 'Tasks Done', value: completedTasks, icon: CheckCircle2, color: 'from-emerald-500 to-green-500' },
+            { label: 'Pending', value: pendingTasks, icon: Clock, color: 'from-blue-500 to-indigo-500' },
+          ].map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+            >
+              <Card className="bg-slate-900/50 border-slate-800/50 hover:border-slate-700/50 transition-colors">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-slate-500 uppercase tracking-wider">{stat.label}</span>
+                    <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center opacity-80`}>
+                      <stat.icon className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
+                  <p className="text-2xl font-bold text-white">{stat.value}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </motion.div>
 
-        <div className="grid lg:grid-cols-12 gap-6">
-          {/* Agent Grid */}
-          <div className="lg:col-span-5 xl:col-span-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Your Agents</h2>
-              <Badge variant="secondary" className="text-xs">{agents.length} Deployed</Badge>
+        {/* Access Level Notice */}
+        {user.role !== 'admin' && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-xl p-4 flex items-center gap-3"
+            style={{
+              background: `${ROLE_COLORS[user.role]}08`,
+              border: `1px solid ${ROLE_COLORS[user.role]}20`,
+            }}
+          >
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${ROLE_COLORS[user.role]}20` }}>
+              <span style={{ color: ROLE_COLORS[user.role] }}>{ROLE_ICONS[user.role]}</span>
             </div>
-            <ScrollArea className="h-[calc(100vh-320px)]">
-              <div className="space-y-3 pr-3">
-                <AnimatePresence mode="popLayout">
-                  {agents.map((agent, idx) => {
-                    const config = TYPE_CONFIG[agent.type] || TYPE_CONFIG['development'];
-                    const statusConfig = STATUS_CONFIG[agent.status] || STATUS_CONFIG['idle'];
-                    const isSelected = selectedAgent?.id === agent.id;
+            <div className="flex-1">
+              <p className="text-sm font-medium" style={{ color: ROLE_COLORS[user.role] }}>
+                Access Level: {ROLE_LABELS[user.role]}
+              </p>
+              <p className="text-xs text-slate-400 mt-0.5">
+                You have access to {accessibleAgents.length} of {totalAgents} agents
+                {!permissions?.canChat && ' • Chat disabled'}
+                {!permissions?.canAssignTasks && ' • Task assignment disabled'}
+                {permissions?.canManageUsers && ' • User management enabled'}
+              </p>
+            </div>
+          </motion.div>
+        )}
 
-                    return (
-                      <motion.div
-                        key={agent.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
-                        transition={{ delay: idx * 0.05 }}
-                      >
-                        <Card
-                          className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-                            isSelected
-                              ? 'ring-2 ring-primary shadow-lg'
-                              : 'hover:border-primary/30'
-                          }`}
-                          onClick={() => handleSelectAgent(agent)}
-                        >
-                          <CardContent className="p-4">
-                            <div className="flex items-start gap-3">
-                              <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${config.gradient} flex items-center justify-center text-white text-lg shrink-0 shadow-lg`}>
-                                {agent.avatar}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <h3 className="font-semibold text-sm truncate">{agent.name}</h3>
-                                  <div className={`flex items-center gap-1 ${statusConfig.color}`}>
-                                    {statusConfig.icon}
-                                    <span className="text-xs font-medium">{statusConfig.label}</span>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-2 mt-0.5">
-                                  <Badge variant="outline" className="text-[10px] h-5 px-1.5">
-                                    {config.label}
-                                  </Badge>
-                                  <span className="text-xs text-muted-foreground">
-                                    {agent.tasksCompleted} tasks done
-                                  </span>
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">
-                                  {agent.description}
-                                </p>
-                                <div className="flex flex-wrap gap-1 mt-2">
-                                  {agent.capabilities.split(',').slice(0, 3).map(cap => (
-                                    <span
-                                      key={cap}
-                                      className="text-[10px] px-1.5 py-0.5 rounded-md bg-muted text-muted-foreground"
-                                    >
-                                      {cap}
-                                    </span>
-                                  ))}
-                                  {agent.capabilities.split(',').length > 3 && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-muted text-muted-foreground">
-                                      +{agent.capabilities.split(',').length - 3}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                              <ChevronRight className={`h-4 w-4 shrink-0 transition-colors ${isSelected ? 'text-primary' : 'text-muted-foreground'}`} />
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
+        {/* Agent Grid + Detail Panel */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Agent Grid */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-teal-400" />
+                TRIBE Agents
+              </h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { fetchAgents(); fetchTasks(); }}
+                className="text-slate-400 hover:text-teal-400"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+
+            {/* Accessible Agents */}
+            <div className="space-y-2">
+              {accessibleAgents.map((agent, i) => (
+                <motion.div
+                  key={agent.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <Card
+                    className={`cursor-pointer transition-all duration-200 hover:scale-[1.01] ${
+                      selectedAgent?.id === agent.id
+                        ? 'border-teal-500/50 bg-teal-500/5 shadow-lg shadow-teal-500/10'
+                        : 'bg-slate-900/50 border-slate-800/50 hover:border-slate-700/50'
+                    }`}
+                    onClick={() => handleSelectAgent(agent)}
+                  >
+                    <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${TYPE_CONFIG[agent.type]?.gradient || 'from-gray-500 to-gray-600'} flex items-center justify-center shadow-lg`}>
+                        <span className="text-lg">{agent.avatar}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold text-white text-sm">{agent.name}</p>
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0" style={{
+                            borderColor: `${agent.color}40`,
+                            color: agent.color,
+                            background: `${agent.color}10`,
+                          }}>
+                            {TYPE_CONFIG[agent.type]?.label}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-slate-400 truncate">{agent.description}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
+                          <div className={`w-2 h-2 rounded-full ${STATUS_CONFIG[agent.status]?.color || 'bg-gray-500'}`} />
+                          <span className="text-xs text-slate-400">{STATUS_CONFIG[agent.status]?.label}</span>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-slate-600" />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-1 text-xs text-slate-500">
+                        <CheckCircle2 className="w-3 h-3" />
+                        {agent.tasksCompleted} tasks
+                      </div>
+                      {agent._count?.tasks > 0 && (
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-amber-500/10 border-amber-500/30 text-amber-400">
+                          {agent._count.tasks} active
+                        </Badge>
+                      )}
+                    </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Restricted Agents (locked) */}
+            {restrictedAgents.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs text-slate-600 uppercase tracking-wider font-semibold flex items-center gap-1">
+                  <Lock className="w-3 h-3" /> Restricted — Upgrade access to unlock
+                </p>
+                {restrictedAgents.map((agent) => (
+                  <Card key={agent.id} className="bg-slate-900/20 border-slate-800/20 opacity-50 cursor-not-allowed">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-slate-800/50 flex items-center justify-center relative">
+                          <span className="text-lg grayscale">{agent.avatar}</span>
+                          <Lock className="w-3 h-3 text-slate-500 absolute -bottom-0.5 -right-0.5" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="font-semibold text-slate-500 text-sm">{agent.name}</p>
+                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-slate-700/30 text-slate-600">
+                              {TYPE_CONFIG[agent.type]?.label}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-slate-600 truncate">{agent.description}</p>
+                        </div>
+                        <Lock className="w-4 h-4 text-slate-700" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
-            </ScrollArea>
+            )}
           </div>
 
-          {/* Agent Detail / Chat / Tasks */}
-          <div className="lg:col-span-7 xl:col-span-8">
+          {/* Agent Detail Panel */}
+          <div className="lg:col-span-7">
             {selectedAgent ? (
               <AgentDetail
                 agent={selectedAgent}
@@ -459,137 +635,92 @@ export default function AgentArmyPage() {
                 chatInput={chatInput}
                 setChatInput={setChatInput}
                 chatLoading={chatLoading}
-                onSendChat={handleSendChat}
                 taskTitle={taskTitle}
                 setTaskTitle={setTaskTitle}
                 taskDesc={taskDesc}
                 setTaskDesc={setTaskDesc}
                 taskPriority={taskPriority}
                 setTaskPriority={setTaskPriority}
-                taskSubmitting={taskSubmitting}
-                onAssignTask={handleAssignTask}
-                tasks={tasks.filter(t => t.agentId === selectedAgent.id)}
+                taskLoading={taskLoading}
+                handleSendChat={handleSendChat}
+                handleAssignTask={handleAssignTask}
                 chatEndRef={chatEndRef}
+                permissions={permissions}
+                userRole={user.role}
               />
             ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center h-[calc(100vh-320px)] text-center"
-              >
-                <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mb-6">
-                  <Bot className="h-10 w-10 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Select an Agent</h3>
-                <p className="text-muted-foreground max-w-md">
-                  Choose an agent from the left panel to start chatting, assign tasks, or view their capabilities. Each agent specializes in a different domain.
-                </p>
-                <div className="grid grid-cols-4 gap-3 mt-8">
-                  {Object.entries(TYPE_CONFIG).map(([type, config]) => (
-                    <div key={type} className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-muted/50">
-                      <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${config.gradient} flex items-center justify-center text-white`}>
-                        {config.icon}
-                      </div>
-                      <span className="text-[10px] text-muted-foreground text-center">{config.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
+              <Card className="bg-slate-900/50 border-slate-800/50 h-full min-h-[500px] flex items-center justify-center">
+                <CardContent className="text-center space-y-4 py-20">
+                  <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center">
+                    <Bot className="w-10 h-10 text-teal-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white">Select an Agent</h3>
+                  <p className="text-slate-400 text-sm max-w-md">
+                    Choose an agent from the TRIBE to start chatting, assign tasks, or view their capabilities.
+                    Each agent specializes in a different domain.
+                  </p>
+                  <div className="flex items-center justify-center gap-2 text-teal-400 text-sm">
+                    <ArrowRight className="w-4 h-4" />
+                    <span>Pick an agent to get started</span>
+                  </div>
+                </CardContent>
+              </Card>
             )}
           </div>
         </div>
 
         {/* Recent Activity */}
-        <div className="mt-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Recent Activity</h2>
-            <Badge variant="secondary" className="text-xs">{tasks.length} Total Tasks</Badge>
-          </div>
-          <Card>
-            <CardContent className="p-0">
+        <Card className="bg-slate-900/50 border-slate-800/50">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-white text-base flex items-center gap-2">
+              <Activity className="w-4 h-4 text-teal-400" />
+              Recent TRIBE Activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2 max-h-64 overflow-y-auto">
               {tasks.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <ListTodo className="h-10 w-10 text-muted-foreground/30 mb-3" />
-                  <p className="text-sm text-muted-foreground">No tasks yet. Select an agent and assign work!</p>
-                </div>
+                <p className="text-slate-500 text-sm text-center py-8">No activity yet. Assign a task to get started!</p>
               ) : (
-                <div className="divide-y">
-                  {tasks.slice(0, 10).map((task, idx) => {
-                    const agent = agents.find(a => a.id === task.agentId);
-                    const config = agent ? TYPE_CONFIG[agent.type] : TYPE_CONFIG['development'];
-                    const priorityConfig = PRIORITY_CONFIG[task.priority] || PRIORITY_CONFIG['medium'];
-                    const isComplete = task.status === 'completed';
-                    const isRunning = task.status === 'running';
-
-                    return (
-                      <motion.div
-                        key={task.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.03 }}
-                        className="flex items-center gap-4 px-4 py-3 hover:bg-muted/30 transition-colors"
-                      >
-                        <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${config.gradient} flex items-center justify-center text-white text-xs shrink-0`}>
-                          {agent?.avatar || '🤖'}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="text-sm font-medium truncate">{task.title}</p>
-                            <Badge className={`text-[10px] h-5 px-1.5 ${priorityConfig.color}`}>
-                              {priorityConfig.label}
-                            </Badge>
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            {agent?.name} • {new Date(task.createdAt).toLocaleTimeString()}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          {isComplete && (
-                            <Badge variant="outline" className="text-emerald-600 border-emerald-200 dark:text-emerald-400 dark:border-emerald-800">
-                              <CheckCircle2 className="h-3 w-3 mr-1" />Done
-                            </Badge>
-                          )}
-                          {isRunning && (
-                            <Badge variant="outline" className="text-amber-600 border-amber-200 dark:text-amber-400 dark:border-amber-800">
-                              <Loader2 className="h-3 w-3 mr-1 animate-spin" />Running
-                            </Badge>
-                          )}
-                          {task.status === 'pending' && (
-                            <Badge variant="outline" className="text-muted-foreground">
-                              <Clock className="h-3 w-3 mr-1" />Pending
-                            </Badge>
-                          )}
-                          {task.status === 'failed' && (
-                            <Badge variant="outline" className="text-red-600 border-red-200 dark:text-red-400 dark:border-red-800">
-                              <AlertCircle className="h-3 w-3 mr-1" />Failed
-                            </Badge>
-                          )}
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
+                tasks.slice(0, 10).map((task) => {
+                  const agent = agents.find(a => a.id === (task as any).agentId);
+                  return (
+                    <div key={task.id} className="flex items-center gap-3 py-2 px-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-colors">
+                      <div className="flex items-center gap-2 text-sm text-slate-300 min-w-0 flex-1">
+                        <span>{agent?.avatar || '🤖'}</span>
+                        <span className="font-medium">{agent?.name || 'Agent'}</span>
+                        <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
+                        <span className="truncate">{task.title}</span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Badge variant="outline" className="text-[10px]" style={{
+                          borderColor: task.status === 'completed' ? '#10B98140' : task.status === 'running' ? '#F59E0B40' : '#3B82F640',
+                          color: task.status === 'completed' ? '#10B981' : task.status === 'running' ? '#F59E0B' : '#3B82F6',
+                          background: task.status === 'completed' ? '#10B98110' : task.status === 'running' ? '#F59E0B10' : '#3B82F610',
+                        }}>
+                          {task.status}
+                        </Badge>
+                        <Badge variant="outline" className="text-[10px]" style={{
+                          borderColor: `${(PRIORITY_CONFIG[task.priority]?.color || '#64748B').replace('bg-', '')}`,
+                        }}>
+                          {task.priority}
+                        </Badge>
+                      </div>
+                    </div>
+                  );
+                })
               )}
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t mt-12 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Agent Army</span>
-              <span className="text-xs text-muted-foreground">— Your AI Workforce</span>
             </div>
-            <p className="text-xs text-muted-foreground">
-              {agents.length} agents deployed • {totalTasksCompleted} tasks completed • All systems operational
-            </p>
-          </div>
-        </div>
-      </footer>
+          </CardContent>
+        </Card>
+
+        {/* Footer */}
+        <footer className="text-center py-4 border-t border-white/5">
+          <p className="text-xs text-slate-600">
+            MARQ AI Agent TRIBE v1.0 — Role-Based AI Workforce Platform
+          </p>
+        </footer>
+      </main>
     </div>
   );
 }
@@ -603,475 +734,337 @@ function AgentDetail({
   chatInput,
   setChatInput,
   chatLoading,
-  onSendChat,
   taskTitle,
   setTaskTitle,
   taskDesc,
   setTaskDesc,
   taskPriority,
   setTaskPriority,
-  taskSubmitting,
-  onAssignTask,
-  tasks,
+  taskLoading,
+  handleSendChat,
+  handleAssignTask,
   chatEndRef,
+  permissions,
+  userRole,
 }: {
   agent: Agent;
   activeTab: string;
   setActiveTab: (tab: string) => void;
   chatMessages: ChatMessage[];
   chatInput: string;
-  setChatInput: (val: string) => void;
+  setChatInput: (v: string) => void;
   chatLoading: boolean;
-  onSendChat: () => void;
   taskTitle: string;
-  setTaskTitle: (val: string) => void;
+  setTaskTitle: (v: string) => void;
   taskDesc: string;
-  setTaskDesc: (val: string) => void;
+  setTaskDesc: (v: string) => void;
   taskPriority: string;
-  setTaskPriority: (val: string) => void;
-  taskSubmitting: boolean;
-  onAssignTask: () => void;
-  tasks: Task[];
-  chatEndRef: React.RefObject<HTMLDivElement | null>;
+  setTaskPriority: (v: string) => void;
+  taskLoading: boolean;
+  handleSendChat: () => void;
+  handleAssignTask: () => void;
+  chatEndRef: React.RefObject<HTMLDivElement>;
+  permissions: { canChat: boolean; canAssignTasks: boolean; canManageUsers: boolean; canViewAnalytics: boolean; canConfigureAgents: boolean } | null;
+  userRole: string;
 }) {
-  const config = TYPE_CONFIG[agent.type] || TYPE_CONFIG['development'];
-  const statusConfig = STATUS_CONFIG[agent.status] || STATUS_CONFIG['idle'];
-  const capabilities = agent.capabilities.split(',');
+  const capabilities = agent.capabilities.split(',').filter(Boolean);
+  const typeConf = TYPE_CONFIG[agent.type];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-4"
+      transition={{ duration: 0.2 }}
     >
-      {/* Agent Header */}
-      <Card className="overflow-hidden">
-        <div className={`h-2 bg-gradient-to-r ${config.gradient}`} />
-        <CardContent className="p-5">
-          <div className="flex items-start gap-4">
-            <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${config.gradient} flex items-center justify-center text-2xl shrink-0 shadow-lg`}>
+      <Card className="bg-slate-900/50 border-slate-800/50 overflow-hidden">
+        {/* Agent Header */}
+        <div className={`bg-gradient-to-r ${typeConf?.gradient || 'from-gray-500 to-gray-600'} p-6`}>
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-3xl shadow-lg">
               {agent.avatar}
             </div>
             <div className="flex-1">
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-bold">{agent.name}</h2>
-                <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${statusConfig.color} bg-opacity-10`}>
-                  {statusConfig.icon}
-                  {statusConfig.label}
+              <h2 className="text-2xl font-bold text-white">{agent.name}</h2>
+              <p className="text-white/80 text-sm mt-1">{agent.description}</p>
+              <div className="flex items-center gap-3 mt-2">
+                <Badge className="bg-white/20 text-white border-0 text-xs">
+                  {typeConf?.label}
+                </Badge>
+                <div className="flex items-center gap-1.5 text-white/80 text-xs">
+                  <div className={`w-2 h-2 rounded-full ${STATUS_CONFIG[agent.status]?.color || 'bg-gray-400'}`} />
+                  {STATUS_CONFIG[agent.status]?.label}
                 </div>
-                <Badge variant="outline" className="text-xs">{config.label}</Badge>
-              </div>
-              <p className="text-sm text-muted-foreground mt-1">{agent.description}</p>
-              <div className="flex items-center gap-4 mt-3">
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  <span>{agent.tasksCompleted} completed</span>
-                </div>
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <ListTodo className="h-3.5 w-3.5" />
-                  <span>{tasks.length} tasks</span>
-                </div>
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  <span>{capabilities.length} capabilities</span>
+                <div className="text-white/60 text-xs">
+                  {agent.tasksCompleted} tasks completed
                 </div>
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="chat" className="gap-1.5">
-            <MessageSquare className="h-3.5 w-3.5" />
-            Chat
-          </TabsTrigger>
-          <TabsTrigger value="tasks" className="gap-1.5">
-            <ListTodo className="h-3.5 w-3.5" />
-            Tasks
-          </TabsTrigger>
-          <TabsTrigger value="overview" className="gap-1.5">
-            <Bot className="h-3.5 w-3.5" />
-            Overview
-          </TabsTrigger>
-        </TabsList>
+        {/* Tabs */}
+        <div className="p-0">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <div className="border-b border-slate-800/50 px-6">
+              <TabsList className="bg-transparent border-0 h-12 gap-4">
+                <TabsTrigger value="chat" className="data-[state=active]:text-teal-400 data-[state=active]:border-b-2 data-[state=active]:border-teal-400 rounded-none px-0">
+                  <MessageSquare className="w-4 h-4 mr-1.5" />
+                  Chat
+                  {!permissions?.canChat && <Lock className="w-3 h-3 ml-1 text-slate-500" />}
+                </TabsTrigger>
+                <TabsTrigger value="tasks" className="data-[state=active]:text-teal-400 data-[state=active]:border-b-2 data-[state=active]:border-teal-400 rounded-none px-0">
+                  <ListTodo className="w-4 h-4 mr-1.5" />
+                  Tasks
+                  {!permissions?.canAssignTasks && <Lock className="w-3 h-3 ml-1 text-slate-500" />}
+                </TabsTrigger>
+                <TabsTrigger value="overview" className="data-[state=active]:text-teal-400 data-[state=active]:border-b-2 data-[state=active]:border-teal-400 rounded-none px-0">
+                  <Eye className="w-4 h-4 mr-1.5" />
+                  Overview
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-        {/* Chat Tab */}
-        <TabsContent value="chat" className="mt-4">
-          <Card className="flex flex-col" style={{ height: '420px' }}>
-            <CardHeader className="pb-3 pt-4 px-4">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-primary" />
-                Chat with {agent.name}
-              </CardTitle>
-            </CardHeader>
-            <Separator />
-            <ScrollArea className="flex-1 px-4">
-              <div className="space-y-4 py-4">
-                {chatMessages.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-8 text-center">
-                    <Bot className="h-8 w-8 text-muted-foreground/30 mb-2" />
-                    <p className="text-sm text-muted-foreground">Start a conversation with {agent.name}</p>
-                    <p className="text-xs text-muted-foreground mt-1">Ask about anything in their domain</p>
-                  </div>
-                )}
-                {chatMessages.map((msg, idx) => (
-                  <motion.div
-                    key={msg.id}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.03 }}
-                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
-                      msg.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
-                    }`}>
-                      {msg.role === 'agent' && (
-                        <div className="flex items-center gap-1.5 mb-1.5">
-                          <span className="text-xs">{agent.avatar}</span>
-                          <span className="text-xs font-medium text-muted-foreground">{agent.name}</span>
+            {/* Chat Tab */}
+            <TabsContent value="chat" className="p-0">
+              {!permissions?.canChat ? (
+                <div className="p-12 text-center">
+                  <Lock className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                  <h3 className="text-white font-semibold">Chat Access Restricted</h3>
+                  <p className="text-slate-400 text-sm mt-1">
+                    Your {ROLE_LABELS[userRole]} role does not include chat permissions.
+                    Contact an administrator to upgrade your access.
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-col h-[450px]">
+                  <ScrollArea className="flex-1 p-4">
+                    <div className="space-y-3">
+                      {chatMessages.length === 0 && (
+                        <div className="text-center py-8">
+                          <Bot className="w-8 h-8 text-teal-400/50 mx-auto mb-2" />
+                          <p className="text-slate-500 text-sm">Start a conversation with {agent.name}</p>
                         </div>
                       )}
-                      <p className="leading-relaxed">{msg.content}</p>
-                      <p className={`text-[10px] mt-1 ${msg.role === 'user' ? 'text-primary-foreground/60' : 'text-muted-foreground'}`}>
-                        {new Date(msg.createdAt).toLocaleTimeString()}
-                      </p>
+                      {chatMessages.map((msg) => (
+                        <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                          <div className={`max-w-[80%] rounded-xl px-4 py-2.5 ${
+                            msg.role === 'user'
+                              ? 'bg-teal-600 text-white'
+                              : 'bg-slate-800 text-slate-200'
+                          }`}>
+                            <p className="text-sm leading-relaxed">{msg.content}</p>
+                          </div>
+                        </div>
+                      ))}
+                      {chatLoading && (
+                        <div className="flex justify-start">
+                          <div className="bg-slate-800 rounded-xl px-4 py-2.5">
+                            <div className="flex items-center gap-1.5">
+                              <Loader2 className="w-3.5 h-3.5 text-teal-400 animate-spin" />
+                              <span className="text-xs text-slate-400">{agent.name} is thinking...</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      <div ref={chatEndRef} />
                     </div>
-                  </motion.div>
-                ))}
-                {chatLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-muted rounded-2xl px-4 py-3">
-                      <div className="flex items-center gap-1.5">
-                        <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
-                        <span className="text-sm text-muted-foreground">{agent.name} is thinking...</span>
-                      </div>
+                  </ScrollArea>
+                  <div className="p-4 border-t border-slate-800/50">
+                    <div className="flex gap-2">
+                      <Input
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendChat()}
+                        placeholder={`Message ${agent.name}...`}
+                        className="bg-slate-800/50 border-slate-700/50 text-white placeholder:text-slate-500"
+                      />
+                      <Button
+                        onClick={handleSendChat}
+                        disabled={!chatInput.trim() || chatLoading}
+                        className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white shrink-0"
+                      >
+                        <Send className="w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
-                )}
-                <div ref={chatEndRef} />
-              </div>
-            </ScrollArea>
-            <Separator />
-            <div className="p-3 flex gap-2">
-              <Input
-                placeholder={`Ask ${agent.name} anything...`}
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && onSendChat()}
-                disabled={chatLoading}
-                className="flex-1"
-              />
-              <Button
-                onClick={onSendChat}
-                disabled={chatLoading || !chatInput.trim()}
-                size="icon"
-                className="shrink-0"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
-          </Card>
-        </TabsContent>
+                </div>
+              )}
+            </TabsContent>
 
-        {/* Tasks Tab */}
-        <TabsContent value="tasks" className="mt-4">
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Assign Task Form */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <Play className="h-4 w-4 text-primary" />
-                  Assign New Task
-                </CardTitle>
-                <CardDescription>Give {agent.name} a new assignment</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1 block">Task Title</label>
-                  <Input
-                    placeholder="e.g., Review authentication module"
-                    value={taskTitle}
-                    onChange={(e) => setTaskTitle(e.target.value)}
-                  />
+            {/* Tasks Tab */}
+            <TabsContent value="tasks" className="p-0">
+              {!permissions?.canAssignTasks ? (
+                <div className="p-12 text-center">
+                  <Lock className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                  <h3 className="text-white font-semibold">Task Assignment Restricted</h3>
+                  <p className="text-slate-400 text-sm mt-1">
+                    Your {ROLE_LABELS[userRole]} role does not include task assignment permissions.
+                    Contact an administrator to upgrade your access.
+                  </p>
                 </div>
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1 block">Description</label>
-                  <Textarea
-                    placeholder="Describe what needs to be done..."
-                    value={taskDesc}
-                    onChange={(e) => setTaskDesc(e.target.value)}
-                    rows={3}
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1 block">Priority</label>
-                  <div className="flex gap-2">
-                    {['low', 'medium', 'high', 'critical'].map(p => (
-                      <Button
-                        key={p}
-                        variant={taskPriority === p ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setTaskPriority(p)}
-                        className="text-xs capitalize"
+              ) : (
+                <div className="p-6 space-y-6">
+                  {/* Assign Task Form */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                      <Play className="w-4 h-4 text-teal-400" />
+                      Assign New Task
+                    </h3>
+                    <Input
+                      value={taskTitle}
+                      onChange={(e) => setTaskTitle(e.target.value)}
+                      placeholder="Task title..."
+                      className="bg-slate-800/50 border-slate-700/50 text-white placeholder:text-slate-500"
+                    />
+                    <Textarea
+                      value={taskDesc}
+                      onChange={(e) => setTaskDesc(e.target.value)}
+                      placeholder="Task description (optional)..."
+                      className="bg-slate-800/50 border-slate-700/50 text-white placeholder:text-slate-500 resize-none"
+                      rows={2}
+                    />
+                    <div className="flex items-center gap-3">
+                      <select
+                        value={taskPriority}
+                        onChange={(e) => setTaskPriority(e.target.value)}
+                        className="bg-slate-800/50 border border-slate-700/50 text-white text-sm rounded-md px-3 py-1.5"
                       >
-                        {p}
+                        <option value="low">Low Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="high">High Priority</option>
+                        <option value="critical">Critical Priority</option>
+                      </select>
+                      <Button
+                        onClick={handleAssignTask}
+                        disabled={!taskTitle.trim() || taskLoading}
+                        className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white"
+                      >
+                        {taskLoading ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Zap className="w-4 h-4 mr-1.5" />}
+                        Assign Task
                       </Button>
+                    </div>
+                  </div>
+
+                  <Separator className="bg-slate-800/50" />
+
+                  {/* Task History */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-white">Task History</h3>
+                    {agent.tasks.length === 0 ? (
+                      <p className="text-slate-500 text-sm text-center py-4">No tasks yet for this agent</p>
+                    ) : (
+                      agent.tasks.map((task) => (
+                        <div key={task.id} className="bg-slate-800/30 rounded-lg p-3 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium text-white">{task.title}</p>
+                            <Badge variant="outline" className="text-[10px]" style={{
+                              borderColor: task.status === 'completed' ? '#10B98140' : task.status === 'running' ? '#F59E0B40' : '#3B82F640',
+                              color: task.status === 'completed' ? '#10B981' : task.status === 'running' ? '#F59E0B' : '#3B82F6',
+                            }}>
+                              {task.status}
+                            </Badge>
+                          </div>
+                          {task.description && <p className="text-xs text-slate-400">{task.description}</p>}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
+            {/* Overview Tab */}
+            <TabsContent value="tasks" className="p-0" />
+            <TabsContent value="overview" className="p-0">
+              <div className="p-6 space-y-6">
+                {/* Capabilities */}
+                <div>
+                  <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-teal-400" />
+                    Capabilities
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {capabilities.map((cap) => (
+                      <Badge key={cap} variant="outline" className="text-xs border-slate-700/50 text-slate-300 bg-slate-800/50">
+                        {cap}
+                      </Badge>
                     ))}
                   </div>
                 </div>
-                <Button
-                  onClick={onAssignTask}
-                  disabled={taskSubmitting || !taskTitle.trim()}
-                  className="w-full gap-2"
-                >
-                  {taskSubmitting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Rocket className="h-4 w-4" />
-                  )}
-                  {taskSubmitting ? 'Assigning...' : 'Assign Task'}
-                </Button>
-              </CardContent>
-            </Card>
 
-            {/* Task List */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <ListTodo className="h-4 w-4 text-primary" />
-                  Task History
-                </CardTitle>
-                <CardDescription>{tasks.length} tasks for {agent.name}</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ScrollArea className="h-[280px]">
-                  {tasks.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-8 text-center px-4">
-                      <ListTodo className="h-8 w-8 text-muted-foreground/30 mb-2" />
-                      <p className="text-sm text-muted-foreground">No tasks yet</p>
-                      <p className="text-xs text-muted-foreground">Assign a task to get started</p>
+                {/* System Prompt / Personality */}
+                {agent.systemPrompt && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                      <Terminal className="w-4 h-4 text-teal-400" />
+                      Agent Personality
+                    </h3>
+                    <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/30">
+                      <p className="text-sm text-slate-300 leading-relaxed">{agent.systemPrompt}</p>
                     </div>
-                  ) : (
-                    <div className="divide-y px-4">
-                      {tasks.map((task, idx) => {
-                        const priorityConfig = PRIORITY_CONFIG[task.priority] || PRIORITY_CONFIG['medium'];
-                        return (
-                          <motion.div
-                            key={task.id}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: idx * 0.03 }}
-                            className="py-3"
-                          >
-                            <div className="flex items-center gap-2">
-                              <p className="text-sm font-medium">{task.title}</p>
-                              <Badge className={`text-[10px] h-5 px-1.5 ${priorityConfig.color}`}>
-                                {priorityConfig.label}
-                              </Badge>
-                            </div>
-                            <div className="flex items-center gap-2 mt-1">
-                              {task.status === 'completed' && (
-                                <span className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                                  <CheckCircle2 className="h-3 w-3" /> Completed
-                                </span>
-                              )}
-                              {task.status === 'running' && (
-                                <span className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                                  <Loader2 className="h-3 w-3 animate-spin" /> In Progress
-                                </span>
-                              )}
-                              {task.status === 'pending' && (
-                                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                  <Clock className="h-3 w-3" /> Pending
-                                </span>
-                              )}
-                              {task.status === 'failed' && (
-                                <span className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
-                                  <AlertCircle className="h-3 w-3" /> Failed
-                                </span>
-                              )}
-                              <span className="text-xs text-muted-foreground">
-                                {new Date(task.createdAt).toLocaleString()}
-                              </span>
-                            </div>
-                            {task.result && (
-                              <p className="text-xs text-muted-foreground mt-1.5 bg-muted/50 rounded-md p-2 line-clamp-2">
-                                {task.result}
-                              </p>
-                            )}
-                          </motion.div>
-                        );
-                      })}
+                  </div>
+                )}
+
+                {/* Performance */}
+                <div>
+                  <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-teal-400" />
+                    Performance
+                  </h3>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-slate-800/30 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-white">{agent.tasksCompleted}</p>
+                      <p className="text-xs text-slate-400">Completed</p>
                     </div>
-                  )}
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Overview Tab */}
-        <TabsContent value="overview" className="mt-4">
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Capabilities */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-primary" />
-                  Capabilities
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-2">
-                  {capabilities.map(cap => {
-                    const capIcons: Record<string, React.ReactNode> = {
-                      'code-generation': <Code2 className="h-3.5 w-3.5" />,
-                      'code-review': <GitBranch className="h-3.5 w-3.5" />,
-                      'debugging': <Bug className="h-3.5 w-3.5" />,
-                      'unit-testing': <TestTube2 className="h-3.5 w-3.5" />,
-                      'deployment': <Rocket className="h-3.5 w-3.5" />,
-                      'monitoring': <Activity className="h-3.5 w-3.5" />,
-                      'database-ops': <Database className="h-3.5 w-3.5" />,
-                      'server': <Server className="h-3.5 w-3.5" />,
-                    };
-                    return (
-                      <div key={cap} className={`flex items-center gap-2 p-2.5 rounded-lg ${config.bgClass} border`}>
-                        {capIcons[cap] || <Wrench className="h-3.5 w-3.5" />}
-                        <span className="text-xs font-medium capitalize">{cap.replace(/-/g, ' ')}</span>
-                      </div>
-                    );
-                  })}
+                    <div className="bg-slate-800/30 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-amber-400">{agent._count?.tasks || 0}</p>
+                      <p className="text-xs text-slate-400">Active</p>
+                    </div>
+                    <div className="bg-slate-800/30 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-teal-400">{agent.tasksCompleted > 0 ? '98%' : '—'}</p>
+                      <p className="text-xs text-slate-400">Success Rate</p>
+                    </div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
 
-            {/* System Prompt / Personality */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <Terminal className="h-4 w-4 text-primary" />
-                  Agent Personality
-                </CardTitle>
-                <CardDescription>How {agent.name} approaches work</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-muted/50 rounded-lg p-4">
-                  <p className="text-sm leading-relaxed text-muted-foreground italic">
-                    {agent.systemPrompt || 'Default agent personality — adaptable and helpful.'}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Performance */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-primary" />
-                  Performance
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                {/* Your Access */}
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-muted-foreground">Tasks Completed</span>
-                    <span className="text-xs font-medium">{agent.tasksCompleted}</span>
+                  <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-teal-400" />
+                    Your Access Rights
+                  </h3>
+                  <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/30 space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-400">Chat with Agent</span>
+                      <span className={permissions?.canChat ? 'text-emerald-400' : 'text-red-400'}>
+                        {permissions?.canChat ? '✓ Allowed' : '✗ Restricted'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-400">Assign Tasks</span>
+                      <span className={permissions?.canAssignTasks ? 'text-emerald-400' : 'text-red-400'}>
+                        {permissions?.canAssignTasks ? '✓ Allowed' : '✗ Restricted'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-400">Configure Agent</span>
+                      <span className={permissions?.canConfigureAgents ? 'text-emerald-400' : 'text-red-400'}>
+                        {permissions?.canConfigureAgents ? '✓ Allowed' : '✗ Restricted'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-400">View Analytics</span>
+                      <span className={permissions?.canViewAnalytics ? 'text-emerald-400' : 'text-red-400'}>
+                        {permissions?.canViewAnalytics ? '✓ Allowed' : '✗ Restricted'}
+                      </span>
+                    </div>
                   </div>
-                  <Progress value={Math.min(100, agent.tasksCompleted * 10)} className="h-2" />
                 </div>
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-muted-foreground">Current Status</span>
-                    <span className="text-xs font-medium capitalize">{agent.status}</span>
-                  </div>
-                  <Progress value={agent.status === 'busy' ? 65 : agent.status === 'idle' ? 100 : 30} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-muted-foreground">Active Tasks</span>
-                    <span className="text-xs font-medium">{tasks.filter(t => t.status === 'running').length}</span>
-                  </div>
-                  <Progress value={tasks.filter(t => t.status === 'running').length * 25} className="h-2" />
-                </div>
-                <Separator />
-                <div className="grid grid-cols-2 gap-3 text-center">
-                  <div className="p-2 rounded-lg bg-muted/50">
-                    <p className="text-lg font-bold">{agent.tasksCompleted}</p>
-                    <p className="text-[10px] text-muted-foreground">Completed</p>
-                  </div>
-                  <div className="p-2 rounded-lg bg-muted/50">
-                    <p className="text-lg font-bold">{tasks.filter(t => t.status === 'running').length}</p>
-                    <p className="text-[10px] text-muted-foreground">In Progress</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-primary" />
-                  Quick Actions
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-2"
-                  onClick={() => setActiveTab('chat')}
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  Start Chat
-                  <ArrowRight className="h-3 w-3 ml-auto" />
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-2"
-                  onClick={() => setActiveTab('tasks')}
-                >
-                  <Play className="h-4 w-4" />
-                  Assign Task
-                  <ArrowRight className="h-3 w-3 ml-auto" />
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-2"
-                  onClick={() => {
-                    setTaskTitle('Full system review');
-                    setTaskDesc('Perform a comprehensive review of all systems and identify areas for improvement');
-                    setTaskPriority('high');
-                    setActiveTab('tasks');
-                  }}
-                >
-                  <MonitorSmartphone className="h-4 w-4" />
-                  System Review
-                  <ArrowRight className="h-3 w-3 ml-auto" />
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-2"
-                  onClick={() => {
-                    setTaskTitle('Generate report');
-                    setTaskDesc('Create a detailed status report with metrics and recommendations');
-                    setTaskPriority('medium');
-                    setActiveTab('tasks');
-                  }}
-                >
-                  <FileText className="h-4 w-4" />
-                  Generate Report
-                  <ArrowRight className="h-3 w-3 ml-auto" />
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </Card>
     </motion.div>
   );
 }

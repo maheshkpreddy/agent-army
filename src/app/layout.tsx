@@ -14,16 +14,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Agent Army — Your AI Workforce, Deployed and Ready",
-  description: "Deploy and manage specialized AI agents for Development, Testing, Business Analysis, Sales, Implementation, Data Analysis, System Admin, and Support.",
-  keywords: ["AI agents", "Agent Army", "AI workforce", "automation", "development agents", "testing agents"],
-  authors: [{ name: "Agent Army" }],
+  title: "MARQ AI Agent TRIBE — Your AI Workforce, Deployed and Ready",
+  description: "MARQ AI Agent TRIBE: Role-based AI workforce platform with 8 specialized agents for Development, Testing, Business Analysis, Sales, Implementation, Data Analysis, System Admin, and Support.",
+  keywords: ["MARQ AI", "Agent TRIBE", "AI workforce", "role-based access", "automation", "AI agents", "development agents"],
+  authors: [{ name: "MARQ AI" }],
   icons: {
     icon: "/logo.svg",
   },
   openGraph: {
-    title: "Agent Army — Your AI Workforce",
-    description: "8 Specialized AI Agents Ready to Work for You",
+    title: "MARQ AI Agent TRIBE — Your AI Workforce",
+    description: "8 Specialized AI Agents with Role-Based Access Control",
     type: "website",
   },
 };

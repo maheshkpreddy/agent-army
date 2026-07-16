@@ -34,7 +34,22 @@ interface ChatMessage {
   role: string;
   content: string;
   agentId: string;
+  conversationId: string;
+  userId: string;
   createdAt: string;
+  deletedAt: string | null;
+}
+
+interface Conversation {
+  id: string;
+  agentId: string;
+  userId: string;
+  title: string;
+  status: 'active' | 'archived';
+  lastMessageAt: string;
+  messageCount: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface User {
@@ -195,6 +210,7 @@ class MemoryStore {
   agents: Agent[] = [...DEFAULT_AGENTS];
   tasks: Task[] = [];
   chatMessages: ChatMessage[] = [];
+  conversations: Conversation[] = [];
   users: User[] = [...DEFAULT_USERS];
   isAvailable = true;
 
@@ -249,19 +265,125 @@ class MemoryStore {
     return null;
   }
 
-  // Chat operations
-  createChatMessage(data: Omit<ChatMessage, 'id' | 'createdAt'>) {
-    const msg: ChatMessage = {
-      ...data,
+  // Conversation operations
+  createConversation(data: { agentId: string; userId: string; title: string }) {
+    const conv: Conversation = {
       id: cuid(),
+      agentId: data.agentId,
+      userId: data.userId,
+      title: data.title,
+      status: 'active',
+      lastMessageAt: new Date().toISOString(),
+      messageCount: 0,
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    this.conversations.unshift(conv);
+    return conv;
+  }
+
+  getConversations(agentId?: string, userId?: string, status?: string) {
+    return this.conversations.filter(c => {
+      if (agentId && c.agentId !== agentId) return false;
+      if (userId && c.userId !== userId) return false;
+      if (status && c.status !== status) return false;
+      return true;
+    });
+  }
+
+  getConversationById(id: string) {
+    return this.conversations.find(c => c.id === id);
+  }
+
+  archiveConversation(id: string) {
+    const idx = this.conversations.findIndex(c => c.id === id);
+    if (idx !== -1) {
+      this.conversations[idx].status = 'archived';
+      this.conversations[idx].updatedAt = new Date().toISOString();
+      return this.conversations[idx];
+    }
+    return null;
+  }
+
+  unarchiveConversation(id: string) {
+    const idx = this.conversations.findIndex(c => c.id === id);
+    if (idx !== -1) {
+      this.conversations[idx].status = 'active';
+      this.conversations[idx].updatedAt = new Date().toISOString();
+      return this.conversations[idx];
+    }
+    return null;
+  }
+
+  deleteConversation(id: string) {
+    // Soft-delete: mark messages as deleted but keep for admin recovery
+    const conv = this.conversations.find(c => c.id === id);
+    if (conv) {
+      // Mark all messages as deleted
+      this.chatMessages.forEach(m => {
+        if (m.conversationId === id) {
+          m.deletedAt = new Date().toISOString();
+        }
+      });
+      // Remove conversation from list (admin can still see deleted messages)
+      this.conversations = this.conversations.filter(c => c.id !== id);
+      return true;
+    }
+    return false;
+  }
+
+  // Chat operations
+  createChatMessage(data: { role: string; content: string; agentId: string; conversationId?: string; userId?: string }) {
+    const msg: ChatMessage = {
+      id: cuid(),
+      role: data.role,
+      content: data.content,
+      agentId: data.agentId,
+      conversationId: data.conversationId || 'default',
+      userId: data.userId || 'unknown',
+      createdAt: new Date().toISOString(),
+      deletedAt: null,
     };
     this.chatMessages.push(msg);
+
+    // Update conversation stats
+    if (data.conversationId) {
+      const convIdx = this.conversations.findIndex(c => c.id === data.conversationId);
+      if (convIdx !== -1) {
+        this.conversations[convIdx].messageCount++;
+        this.conversations[convIdx].lastMessageAt = new Date().toISOString();
+        this.conversations[convIdx].updatedAt = new Date().toISOString();
+      }
+    }
+
     return msg;
   }
 
-  getChatMessages(agentId: string) {
-    return this.chatMessages.filter(m => m.agentId === agentId);
+  getChatMessages(agentId: string, includeDeleted = false) {
+    return this.chatMessages.filter(m => {
+      if (m.agentId !== agentId) return false;
+      if (!includeDeleted && m.deletedAt) return false;
+      return true;
+    });
+  }
+
+  getConversationMessages(conversationId: string, includeDeleted = false) {
+    return this.chatMessages.filter(m => {
+      if (m.conversationId !== conversationId) return false;
+      if (!includeDeleted && m.deletedAt) return false;
+      return true;
+    });
+  }
+
+  // Admin: get ALL messages including deleted ones
+  getAllMessages(includeDeleted = false) {
+    if (includeDeleted) return this.chatMessages;
+    return this.chatMessages.filter(m => !m.deletedAt);
+  }
+
+  // Admin: get all conversations including deleted
+  getAllConversations() {
+    return this.conversations;
   }
 
   // User operations

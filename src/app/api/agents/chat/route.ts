@@ -166,7 +166,7 @@ IMPORTANT BEHAVIORS:
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { agentId, content, stream: useStream = true } = body;
+    const { agentId, content, stream: useStream = true, conversationId, userId } = body;
 
     if (!agentId || !content) {
       return NextResponse.json({ error: 'agentId and content are required' }, { status: 400 });
@@ -197,8 +197,12 @@ export async function POST(req: NextRequest) {
       if (!agent) {
         return NextResponse.json({ error: 'Agent not found' }, { status: 404 });
       }
-      memoryStore.createChatMessage({ role: 'user', content, agentId });
-      chatHistory = memoryStore.getChatMessages(agentId).slice(-20);
+      memoryStore.createChatMessage({ role: 'user', content, agentId, conversationId: conversationId || 'default', userId: userId || 'unknown' });
+      if (conversationId) {
+        chatHistory = memoryStore.getConversationMessages(conversationId).slice(-20);
+      } else {
+        chatHistory = memoryStore.getChatMessages(agentId).slice(-20);
+      }
     }
 
     // Check for special action requests based on agent type
@@ -296,7 +300,7 @@ export async function POST(req: NextRequest) {
                 data: { role: 'agent', content: finalResponse, agentId }
               });
             } else {
-              memoryStore.createChatMessage({ role: 'agent', content: finalResponse, agentId });
+              memoryStore.createChatMessage({ role: 'agent', content: finalResponse, agentId, conversationId: conversationId || 'default', userId: userId || 'unknown' });
             }
 
             // Send completion event with metadata
@@ -324,7 +328,7 @@ export async function POST(req: NextRequest) {
             if (useDb) {
               await db.chatMessage.create({ data: { role: 'agent', content: fallbackResponse, agentId } });
             } else {
-              memoryStore.createChatMessage({ role: 'agent', content: fallbackResponse, agentId });
+              memoryStore.createChatMessage({ role: 'agent', content: fallbackResponse, agentId, conversationId: conversationId || 'default', userId: userId || 'unknown' });
             }
 
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done', actionResult: null })}\n\n`));
@@ -383,7 +387,7 @@ export async function POST(req: NextRequest) {
         data: { role: 'agent', content: finalResponse, agentId }
       });
     } else {
-      message = memoryStore.createChatMessage({ role: 'agent', content: finalResponse, agentId });
+      message = memoryStore.createChatMessage({ role: 'agent', content: finalResponse, agentId, conversationId: conversationId || 'default', userId: userId || 'unknown' });
     }
 
     const responseData: any = { message };

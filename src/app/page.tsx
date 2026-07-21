@@ -13,7 +13,9 @@ import {
   FileText, ClipboardCheck, Menu, ArrowLeft,
   History, Archive, Trash2, ArchiveRestore, Users, Database,
   Factory, Building2, Heart, GraduationCap, Wifi,
-  Flame, ShoppingBag, Filter, XCircle
+  Flame, ShoppingBag, Filter, XCircle,
+  Palette, Smartphone, PenTool, BrainCircuit, Server,
+  Megaphone, Map, ShieldAlert, Gauge
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,6 +40,7 @@ interface Agent {
   name: string;
   slug: string;
   type: string;
+  team: string;
   description: string;
   avatar: string;
   color: string;
@@ -100,14 +103,24 @@ interface UserInfo {
   department: string;
 }
 
+// Team configuration
+const TEAM_CONFIG: Record<string, { label: string; icon: React.ReactNode; color: string; bg: string; order: number }> = {
+  'development': { label: 'Development Team', icon: <Code2 className="w-3.5 h-3.5" />, color: '#10B981', bg: '#10B98112', order: 1 },
+  'testing': { label: 'Testing Team', icon: <TestTube2 className="w-3.5 h-3.5" />, color: '#8B5CF6', bg: '#8B5CF612', order: 2 },
+  'business': { label: 'Business Team', icon: <BarChart3 className="w-3.5 h-3.5" />, color: '#F59E0B', bg: '#F59E0B12', order: 3 },
+  'data': { label: 'Data Team', icon: <TrendingUp className="w-3.5 h-3.5" />, color: '#3B82F6', bg: '#3B82F612', order: 4 },
+  'operations': { label: 'Operations Team', icon: <Server className="w-3.5 h-3.5" />, color: '#06B6D4', bg: '#06B6D412', order: 5 },
+  'design': { label: 'Design Team', icon: <Palette className="w-3.5 h-3.5" />, color: '#A855F7', bg: '#A855F712', order: 6 },
+};
+
 // Role configuration
 const ROLE_AGENT_ACCESS: Record<string, string[]> = {
-  admin: ['development', 'testing', 'business-analysis', 'sales', 'implementation', 'data-analysis', 'system-admin', 'support'],
-  manager: ['development', 'testing', 'business-analysis', 'sales', 'implementation', 'data-analysis', 'system-admin', 'support'],
-  developer: ['development', 'testing', 'data-analysis'],
-  analyst: ['business-analysis', 'data-analysis', 'sales'],
-  operator: ['implementation', 'system-admin', 'support'],
-  viewer: ['development', 'testing', 'business-analysis', 'sales', 'implementation', 'data-analysis', 'system-admin', 'support'],
+  admin: ['development', 'frontend', 'backend', 'mobile-dev', 'testing', 'security-testing', 'performance', 'business-analysis', 'sales', 'product-management', 'marketing', 'data-analysis', 'ml-engineering', 'data-engineering', 'implementation', 'system-admin', 'devops', 'support', 'ux-design', 'content-design'],
+  manager: ['development', 'frontend', 'backend', 'mobile-dev', 'testing', 'security-testing', 'performance', 'business-analysis', 'sales', 'product-management', 'marketing', 'data-analysis', 'ml-engineering', 'data-engineering', 'implementation', 'system-admin', 'devops', 'support', 'ux-design', 'content-design'],
+  developer: ['development', 'frontend', 'backend', 'mobile-dev', 'testing', 'data-analysis', 'devops'],
+  analyst: ['business-analysis', 'data-analysis', 'ml-engineering', 'data-engineering', 'sales', 'product-management', 'marketing'],
+  operator: ['implementation', 'system-admin', 'devops', 'support', 'security-testing'],
+  viewer: ['development', 'frontend', 'backend', 'mobile-dev', 'testing', 'security-testing', 'performance', 'business-analysis', 'sales', 'product-management', 'marketing', 'data-analysis', 'ml-engineering', 'data-engineering', 'implementation', 'system-admin', 'devops', 'support', 'ux-design', 'content-design'],
 };
 
 const ROLE_PERMISSIONS: Record<string, {
@@ -148,13 +161,25 @@ const ROLE_ICONS: Record<string, React.ReactNode> = {
 // Agent type config
 const TYPE_CONFIG: Record<string, { icon: React.ReactNode; color: string; label: string; bg: string }> = {
   'development': { icon: <Code2 className="w-4 h-4" />, color: '#10B981', label: 'Dev', bg: '#10B98115' },
+  'frontend': { icon: <Palette className="w-4 h-4" />, color: '#F472B6', label: 'Frontend', bg: '#F472B615' },
+  'backend': { icon: <Server className="w-4 h-4" />, color: '#14B8A6', label: 'Backend', bg: '#14B8A615' },
+  'mobile-dev': { icon: <Smartphone className="w-4 h-4" />, color: '#8B5CF6', label: 'Mobile', bg: '#8B5CF615' },
   'testing': { icon: <TestTube2 className="w-4 h-4" />, color: '#8B5CF6', label: 'QA', bg: '#8B5CF615' },
+  'security-testing': { icon: <ShieldAlert className="w-4 h-4" />, color: '#EF4444', label: 'Security', bg: '#EF444415' },
+  'performance': { icon: <Gauge className="w-4 h-4" />, color: '#F59E0B', label: 'Perf', bg: '#F59E0B15' },
   'business-analysis': { icon: <BarChart3 className="w-4 h-4" />, color: '#F59E0B', label: 'BA', bg: '#F59E0B15' },
   'sales': { icon: <Target className="w-4 h-4" />, color: '#EF4444', label: 'Sales', bg: '#EF444415' },
-  'implementation': { icon: <Rocket className="w-4 h-4" />, color: '#06B6D4', label: 'Impl', bg: '#06B6D415' },
+  'product-management': { icon: <Map className="w-4 h-4" />, color: '#6366F1', label: 'Product', bg: '#6366F115' },
+  'marketing': { icon: <Megaphone className="w-4 h-4" />, color: '#EC4899', label: 'Marketing', bg: '#EC489915' },
   'data-analysis': { icon: <TrendingUp className="w-4 h-4" />, color: '#3B82F6', label: 'Data', bg: '#3B82F615' },
+  'ml-engineering': { icon: <BrainCircuit className="w-4 h-4" />, color: '#0EA5E9', label: 'ML', bg: '#0EA5E915' },
+  'data-engineering': { icon: <Database className="w-4 h-4" />, color: '#22C55E', label: 'DataEng', bg: '#22C55E15' },
+  'implementation': { icon: <Rocket className="w-4 h-4" />, color: '#06B6D4', label: 'Impl', bg: '#06B6D415' },
   'system-admin': { icon: <Shield className="w-4 h-4" />, color: '#64748B', label: 'SysOps', bg: '#64748B15' },
+  'devops': { icon: <RefreshCw className="w-4 h-4" />, color: '#0EA5E9', label: 'DevOps', bg: '#0EA5E915' },
   'support': { icon: <Headphones className="w-4 h-4" />, color: '#EC4899', label: 'Support', bg: '#EC489915' },
+  'ux-design': { icon: <PenTool className="w-4 h-4" />, color: '#A855F7', label: 'UX', bg: '#A855F715' },
+  'content-design': { icon: <FileText className="w-4 h-4" />, color: '#F97316', label: 'Content', bg: '#F9731615' },
 };
 
 const STATUS_CONFIG: Record<string, { dotColor: string; label: string }> = {
@@ -261,6 +286,7 @@ export default function MARQAIAgentTRIBE() {
   const [userLoading, setUserLoading] = useState(true);
   const [selectedIndustry, setSelectedIndustry] = useState('');
   const [industryFilterOpen, setIndustryFilterOpen] = useState(false);
+  const [expandedTeams, setExpandedTeams] = useState<Record<string, boolean>>({ development: true, testing: true, business: true, data: true, operations: true, design: true });
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -580,6 +606,21 @@ export default function MARQAIAgentTRIBE() {
     return Array.from(industries).sort();
   }, [accessibleAgents]);
 
+  // Group filtered agents by team
+  const agentsByTeam = useMemo(() => {
+    const teams: Record<string, Agent[]> = {};
+    filteredAgents.forEach(agent => {
+      const team = agent.team || 'operations';
+      if (!teams[team]) teams[team] = [];
+      teams[team].push(agent);
+    });
+    // Sort teams by order
+    const sorted = Object.entries(teams).sort(([a], [b]) => {
+      return (TEAM_CONFIG[a]?.order ?? 99) - (TEAM_CONFIG[b]?.order ?? 99);
+    });
+    return sorted;
+  }, [filteredAgents]);
+
   const permissions = useMemo(() => user ? ROLE_PERMISSIONS[user.role] : null, [user]);
   const agentTasks = useMemo(() => tasks.filter(t => selectedAgent && (t as any).agentId === selectedAgent.id), [tasks, selectedAgent]);
 
@@ -714,13 +755,25 @@ export default function MARQAIAgentTRIBE() {
           </div>
         )}
 
-        {/* Agent List */}
+        {/* Agent List - Grouped by Teams */}
         <div className="flex-1 overflow-y-auto py-2 px-1.5 space-y-0.5">
           {sidebarOpen ? (
             <>
-              <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-2 mb-1.5">
-                Agents {selectedIndustry ? `(${filteredAgents.length})` : ''}
-              </p>
+              <div className="flex items-center justify-between px-2 mb-1.5">
+                <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider">
+                  Teams {selectedIndustry ? `(${filteredAgents.length})` : `(${accessibleAgents.length})`}
+                </p>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => setExpandedTeams(Object.fromEntries(Object.keys(TEAM_CONFIG).map(k => [k, true])))}
+                    className="text-[8px] text-slate-600 hover:text-teal-400 px-1"
+                  >All</button>
+                  <button
+                    onClick={() => setExpandedTeams(Object.fromEntries(Object.keys(TEAM_CONFIG).map(k => [k, false])))}
+                    className="text-[8px] text-slate-600 hover:text-teal-400 px-1"
+                  >None</button>
+                </div>
+              </div>
               {filteredAgents.length === 0 && selectedIndustry ? (
                 <div className="px-2 py-4 text-center">
                   <p className="text-[10px] text-slate-600">No agents for this industry</p>
@@ -732,10 +785,33 @@ export default function MARQAIAgentTRIBE() {
                   </button>
                 </div>
               ) : (
-                filteredAgents.map((agent) => (
-                  <AgentListItem key={agent.id} agent={agent} isSelected={selectedAgent?.id === agent.id}
-                    onClick={() => handleSelectAgent(agent)} />
-                ))
+                agentsByTeam.map(([teamId, teamAgents]) => {
+                  const teamConf = TEAM_CONFIG[teamId];
+                  const isExpanded = expandedTeams[teamId] !== false;
+                  return (
+                    <div key={teamId} className="mb-1">
+                      <button
+                        onClick={() => setExpandedTeams(prev => ({ ...prev, [teamId]: !isExpanded }))}
+                        className="w-full flex items-center gap-1.5 px-2 py-1.5 rounded-md hover:bg-white/[0.03] transition-colors"
+                      >
+                        <span className="shrink-0" style={{ color: teamConf?.color || '#64748B' }}>{teamConf?.icon}</span>
+                        <span className="text-[10px] font-semibold uppercase tracking-wider flex-1 text-left" style={{ color: teamConf?.color || '#64748B' }}>
+                          {teamConf?.label || teamId}
+                        </span>
+                        <span className="text-[9px] text-slate-600 mr-1">{teamAgents.length}</span>
+                        {isExpanded ? <ChevronUp className="w-3 h-3 text-slate-600" /> : <ChevronDown className="w-3 h-3 text-slate-600" />}
+                      </button>
+                      {isExpanded && (
+                        <div className="space-y-0.5 ml-1">
+                          {teamAgents.map((agent) => (
+                            <AgentListItem key={agent.id} agent={agent} isSelected={selectedAgent?.id === agent.id}
+                              onClick={() => handleSelectAgent(agent)} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
               )}
             </>
           ) : (
@@ -810,6 +886,12 @@ export default function MARQAIAgentTRIBE() {
                     <Badge variant="outline" className="text-[9px] h-4 px-1.5" style={{ borderColor: TYPE_CONFIG[selectedAgent.type]?.color + '30', color: TYPE_CONFIG[selectedAgent.type]?.color }}>
                       {TYPE_CONFIG[selectedAgent.type]?.label}
                     </Badge>
+                    {selectedAgent.team && TEAM_CONFIG[selectedAgent.team] && (
+                      <Badge variant="outline" className="text-[9px] h-4 px-1.5" style={{ borderColor: TEAM_CONFIG[selectedAgent.team]?.color + '30', color: TEAM_CONFIG[selectedAgent.team]?.color, background: TEAM_CONFIG[selectedAgent.team]?.bg }}>
+                        {TEAM_CONFIG[selectedAgent.team]?.icon}
+                        <span className="ml-1">{TEAM_CONFIG[selectedAgent.team]?.label?.replace(' Team', '')}</span>
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-[10px] text-slate-500 truncate max-w-xs">{selectedAgent.description}</p>
                   {selectedAgent.industry && selectedAgent.industry.length > 0 && (

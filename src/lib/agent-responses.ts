@@ -64,20 +64,44 @@ export function generateContextualResponse(agent: AgentConfig, userContent: stri
   // If we have specific topic matches, generate detailed topic-specific responses
   if (type === 'development') {
     return generateDevResponse(userContent, analysis);
+  } else if (type === 'frontend') {
+    return generateFrontendResponse(userContent, analysis);
+  } else if (type === 'backend') {
+    return generateBackendResponse(userContent, analysis);
+  } else if (type === 'mobile-dev') {
+    return generateMobileResponse(userContent, analysis);
   } else if (type === 'testing') {
     return generateTestResponse(userContent, analysis);
+  } else if (type === 'security-testing') {
+    return generateSecurityResponse(userContent, analysis);
+  } else if (type === 'performance') {
+    return generatePerfResponse(userContent, analysis);
   } else if (type === 'business-analysis') {
     return generateBAResponse(userContent, analysis);
   } else if (type === 'sales') {
     return generateSalesResponse(userContent, analysis);
-  } else if (type === 'implementation') {
-    return generateImplResponse(userContent, analysis);
+  } else if (type === 'product-management') {
+    return generateProductResponse(userContent, analysis);
+  } else if (type === 'marketing') {
+    return generateMarketingResponse(userContent, analysis);
   } else if (type === 'data-analysis') {
     return generateDataResponse(userContent, analysis);
+  } else if (type === 'ml-engineering') {
+    return generateMLResponse(userContent, analysis);
+  } else if (type === 'data-engineering') {
+    return generateDataEngResponse(userContent, analysis);
+  } else if (type === 'implementation') {
+    return generateImplResponse(userContent, analysis);
   } else if (type === 'system-admin') {
     return generateSysAdminResponse(userContent, analysis);
+  } else if (type === 'devops') {
+    return generateDevOpsResponse(userContent, analysis);
   } else if (type === 'support') {
     return generateSupportResponse(userContent, analysis);
+  } else if (type === 'ux-design') {
+    return generateUXResponse(userContent, analysis);
+  } else if (type === 'content-design') {
+    return generateContentResponse(userContent, analysis);
   }
 
   return generateGenericResponse(name, userContent, analysis);
@@ -1110,4 +1134,632 @@ To give you the best assistance, could you describe your specific need in more d
 - What's the expected outcome?
 
 I'll provide comprehensive, actionable guidance with code examples, step-by-step instructions, and best practices!`;
+}
+
+// ===== NEW AGENT RESPONSE GENERATORS =====
+
+function generateFrontendResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Frontend Engineering Solution
+
+I'll help you build a polished, accessible, and performant frontend! Here's my approach:
+
+## 🎨 Component Architecture
+
+\`\`\`typescript
+// Design system foundation
+// components/ui/button.tsx
+import { forwardRef } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-red-500 text-white hover:bg-red-600',
+        outline: 'border border-input bg-background hover:bg-accent',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+      },
+    },
+    defaultVariants: { variant: 'default', size: 'default' },
+  }
+);
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {}
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, ...props }, ref) => (
+  <button className={buttonVariants({ variant, size, className })} ref={ref} {...props} />
+));
+Button.displayName = 'Button';
+export { Button, buttonVariants };
+\`\`\`
+
+## ⚡ Performance Best Practices
+
+1. **Code Splitting** — Use dynamic imports for route-based splitting
+2. **Image Optimization** — Use Next.js Image component with proper sizing
+3. **Font Loading** — Use next/font with display: swap
+4. **Bundle Analysis** — Monitor bundle size with @next/bundle-analyzer
+
+## ♿ Accessibility Checklist
+
+- Semantic HTML elements (nav, main, article, aside)
+- ARIA labels for interactive elements
+- Keyboard navigation support (Tab, Enter, Escape)
+- Color contrast ratio >= 4.5:1
+- Focus indicators visible and clear
+
+What specific frontend component or feature would you like me to build?`;
+}
+
+function generateBackendResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Backend Architecture Solution
+
+I'll design a robust, scalable backend for you! Here's my approach:
+
+## 🏗️ API Design
+
+\`\`\`typescript
+// api/items/route.ts — Next.js App Router API
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+
+const ItemSchema = z.object({
+  name: z.string().min(1).max(255),
+  description: z.string().optional(),
+  status: z.enum(['active', 'archived']).default('active'),
+});
+
+// GET /api/items — List with pagination & filtering
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const page = Math.max(1, Number(searchParams.get('page') || 1));
+  const limit = Math.min(100, Math.max(1, Number(searchParams.get('limit') || 20)));
+  const status = searchParams.get('status');
+
+  // Query with pagination
+  const items = await db.item.findMany({
+    where: status ? { status } : undefined,
+    skip: (page - 1) * limit,
+    take: limit,
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return NextResponse.json({ items, page, limit });
+}
+
+// POST /api/items — Create with validation
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const data = ItemSchema.parse(body);
+    const item = await db.item.create({ data });
+    return NextResponse.json(item, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Validation failed' }, { status: 400 });
+  }
+}
+\`\`\`
+
+## 🔒 Security Best Practices
+
+1. **Input Validation** — Always validate with Zod/Joi before processing
+2. **Rate Limiting** — Implement per-IP and per-user limits
+3. **Authentication** — Use JWT with short expiry + refresh tokens
+4. **SQL Injection** — Use parameterized queries (Prisma handles this)
+
+What backend system or API would you like me to architect?`;
+}
+
+function generateMobileResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Mobile Development Solution
+
+I'll help you build a cross-platform mobile app! Here's my approach:
+
+## 📱 React Native Project Structure
+
+\`\`\`typescript
+// App.tsx — Navigation setup
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+const Tab = createBottomTabNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Search" component={SearchScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+\`\`\`
+
+## 🔄 Offline-First Architecture
+
+1. **Local Storage** — Use AsyncStorage + SQLite for offline data
+2. **Sync Strategy** — Background sync when network is available
+3. **Conflict Resolution** — Last-write-wins or custom merge logic
+4. **Optimistic Updates** — Update UI immediately, sync in background
+
+## 📲 App Store Checklist
+
+- App icons in all required sizes (1024x1024 for store)
+- Splash screens for iOS and Android
+- Privacy policy URL
+- App description and screenshots
+- TestFlight/Internal testing complete
+
+What mobile feature or app would you like me to build?`;
+}
+
+function generateSecurityResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Security Assessment & Recommendations
+
+I'll help you secure your application! Here's my comprehensive approach:
+
+## 🔍 OWASP Top 10 Checklist
+
+| Risk | Status | Mitigation |
+|------|--------|------------|
+| A01: Broken Access Control | ⚠️ Check | Implement RBAC with least-privilege principle |
+| A02: Cryptographic Failures | ⚠️ Check | Use TLS 1.3, AES-256 for data at rest |
+| A03: Injection | ⚠️ Check | Parameterized queries, input validation |
+| A04: Insecure Design | ⚠️ Check | Threat modeling, secure architecture review |
+| A05: Security Misconfiguration | ⚠️ Check | Automated security headers, disable debug modes |
+| A06: Auth Failures | ⚠️ Check | MFA, account lockout, strong password policy |
+| A07: XSS | ⚠️ Check | CSP headers, output encoding, sanitize inputs |
+| A08: Software Integrity | ⚠️ Check | Verify dependencies, SCA scanning |
+| A09: Logging Failures | ⚠️ Check | Centralized logging, anomaly detection |
+| A10: SSRF | ⚠️ Check | Allowlist external requests, disable redirects |
+
+## 🛡️ Security Headers
+
+\`\`\`
+Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{random}'; style-src 'self' 'unsafe-inline'
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 0
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+\`\`\`
+
+What security concern would you like me to assess?`;
+}
+
+function generatePerfResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Performance Engineering Analysis
+
+I'll help you optimize your system's performance! Here's my methodology:
+
+## ⚡ Performance Audit Framework
+
+### 1. Core Web Vitals Targets
+- **LCP** (Largest Contentful Paint) < 2.5s
+- **FID** (First Input Delay) < 100ms
+- **CLS** (Cumulative Layout Shift) < 0.1
+- **INP** (Interaction to Next Paint) < 200ms
+
+### 2. Load Testing Strategy
+
+\`\`\`bash
+# k6 load test example
+import http from 'k6/http';
+import { check, sleep } from 'k6';
+
+export const options = {
+  stages: [
+    { duration: '30s', target: 20 },   // Ramp up
+    { duration: '1m', target: 20 },     // Sustain
+    { duration: '30s', target: 100 },   // Spike
+    { duration: '1m', target: 100 },    // Sustain peak
+    { duration: '30s', target: 0 },     // Ramp down
+  ],
+  thresholds: {
+    http_req_duration: ['p(95)<500'],  // 95% under 500ms
+    http_req_failed: ['rate<0.01'],    // <1% failure rate
+  },
+};
+
+export default function () {
+  const res = http.get('https://your-api.com/endpoint');
+  check(res, { 'status 200': (r) => r.status === 200 });
+  sleep(1);
+}
+\`\`\`
+
+### 3. Optimization Checklist
+- [ ] Enable gzip/brotli compression
+- [ ] Implement CDN for static assets
+- [ ] Database query optimization (indexes, N+1)
+- [ ] Redis caching for frequent queries
+- [ ] Connection pooling for database
+- [ ] Image optimization (WebP, lazy loading)
+
+What performance issue are you experiencing? I'll provide targeted optimization steps!`;
+}
+
+function generateProductResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Product Strategy & Planning
+
+I'll help you build a product roadmap that aligns user needs with business goals! Here's my framework:
+
+## 🗺️ Product Roadmap Framework
+
+### Vision & Goals
+- **North Star Metric**: Define the single metric that best captures core product value
+- **OKRs**: Set quarterly Objectives with measurable Key Results
+- **User Personas**: Build empathy with detailed persona profiles
+
+### Prioritization Matrix
+
+| Feature | Impact | Effort | Score | Priority |
+|---------|--------|--------|-------|----------|
+| Core workflow | High | Medium | 9 | P0 |
+| Onboarding flow | High | Low | 8 | P0 |
+| Analytics dashboard | Medium | Medium | 6 | P1 |
+| Social sharing | Low | Low | 4 | P2 |
+| Advanced settings | Low | High | 2 | P3 |
+
+### Sprint Planning Template
+1. **P0** — Must-have for launch (blockers)
+2. **P1** — Should-have for competitive parity
+3. **P2** — Nice-to-have for differentiation
+4. **P3** — Future considerations
+
+## 📊 Key Metrics to Track
+
+- **Acquisition**: Signup rate, activation rate
+- **Engagement**: DAU/MAU, session duration, feature adoption
+- **Retention**: D1/D7/D30 retention curves
+- **Revenue**: MRR, ARPU, LTV
+- **Referral**: NPS, viral coefficient
+
+What product challenge would you like to work on?`;
+}
+
+function generateMarketingResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Marketing Strategy & Campaign Plan
+
+I'll help you create a data-driven marketing strategy! Here's my approach:
+
+## 📢 Multi-Channel Campaign Framework
+
+### Channel Mix & Budget Allocation
+- **SEO & Content** (30%) — Long-term organic growth engine
+- **Paid Search** (25%) — High-intent capture
+- **Social Media** (20%) — Brand awareness & engagement
+- **Email Marketing** (15%) — Nurture & retention
+- **Partnerships** (10%) — Co-marketing & amplification
+
+### Content Strategy Pillars
+1. **Educational** — How-to guides, tutorials, best practices
+2. **Thought Leadership** — Industry insights, trend analysis
+3. **Case Studies** — Customer success stories with metrics
+4. **Product-Led** — Feature deep dives, release highlights
+
+## 📈 Campaign Metrics Dashboard
+
+| Metric | Target | Current | Status |
+|--------|--------|---------|--------|
+| Organic Traffic | +40% QoQ | +12% | 🟡 On Track |
+| Conversion Rate | 3.5% | 2.8% | 🔴 Below |
+| CAC | <$50 | $62 | 🔴 Above |
+| Email Open Rate | 25% | 28% | 🟢 Above |
+| Social Engagement | 5% | 4.2% | 🟡 On Track |
+
+## 🎯 SEO Quick Wins
+1. Fix technical SEO issues (broken links, sitemap, robots.txt)
+2. Optimize meta titles & descriptions for CTR
+3. Build topic clusters around pillar content
+4. Implement schema markup for rich snippets
+
+What marketing challenge would you like to tackle?`;
+}
+
+function generateMLResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Machine Learning Engineering Solution
+
+I'll help you build production-grade ML systems! Here's my approach:
+
+## 🤖 ML Pipeline Architecture
+
+\`\`\`
+Data Ingestion → Feature Engineering → Model Training → Evaluation → Deployment → Monitoring
+      ↑                                                              ↓
+      └──────────── Feedback Loop (retraining triggers) ─────────────┘
+\`\`\`
+
+### Model Development Workflow
+
+\`\`\`python
+# Experiment tracking with MLflow
+import mlflow
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import f1_score, precision_score, recall_score
+
+mlflow.set_experiment("customer_churn_prediction")
+
+with mlflow.start_run():
+    # Log parameters
+    mlflow.log_params({
+        "n_estimators": 200,
+        "max_depth": 8,
+        "learning_rate": 0.05,
+    })
+
+    model = GradientBoostingClassifier(
+        n_estimators=200, max_depth=8, learning_rate=0.05
+    )
+    model.fit(X_train, y_train)
+
+    # Evaluate & log metrics
+    y_pred = model.predict(X_test)
+    mlflow.log_metrics({
+        "f1_score": f1_score(y_test, y_pred),
+        "precision": precision_score(y_test, y_pred),
+        "recall": recall_score(y_test, y_pred),
+    })
+
+    mlflow.sklearn.log_model(model, "model")
+\`\`\`
+
+## 🔬 MLOps Checklist
+- [ ] Feature store for consistent feature computation
+- [ ] Model versioning and registry
+- [ ] A/B testing framework for model comparison
+- [ ] Data drift detection and alerting
+- [ ] Automated retraining pipeline
+- [ ] Model explainability (SHAP/LIME)
+
+What ML problem would you like to solve?`;
+}
+
+function generateDataEngResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Data Engineering Solution
+
+I'll help you build reliable, scalable data infrastructure! Here's my approach:
+
+## 🔧 Data Pipeline Architecture
+
+\`\`\`
+Source Systems → Ingestion Layer → Processing → Storage → Serving Layer
+  (APIs/DBs)    (Kafka/Airflow)   (Spark/dbt)  (S3/DW)   (API/BI)
+\`\`\`
+
+### Modern Data Stack
+
+\`\`\`yaml
+# docker-compose.yml for local data stack
+services:
+  # Data Warehouse
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: analytics
+
+  # Orchestration
+  airflow:
+    image: apache/airflow:2.8
+    depends_on: [postgres]
+
+  # Transformation
+  dbt:
+    build:
+      context: ./dbt_project
+
+  # Streaming
+  kafka:
+    image: confluentinc/cp-kafka:7.5
+
+  # Monitoring
+  grafana:
+    image: grafana/grafana:10
+\`\`\`
+
+## 📊 Data Quality Framework
+
+| Check | Type | Threshold | Action |
+|-------|------|-----------|--------|
+| Row count | Anomaly | ±20% from avg | Alert + Pause |
+| Null rate | Threshold | <5% per column | Alert + Log |
+| Freshness | SLA | <1hr lag | Page + Retry |
+| Uniqueness | Constraint | 100% on PK | Block + Alert |
+
+## 🔄 Pipeline Best Practices
+1. **Idempotency** — Safe to re-run without side effects
+2. **Observability** — Log every step with structured metadata
+3. **Error Handling** — Dead letter queues, retry with backoff
+4. **Schema Evolution** — Avro/Protobuf for backward compatibility
+
+What data pipeline challenge would you like to solve?`;
+}
+
+function generateDevOpsResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# DevOps & CI/CD Solution
+
+I'll help you build fast, reliable delivery pipelines! Here's my approach:
+
+## 🚀 CI/CD Pipeline with GitHub Actions
+
+\`\`\`yaml
+# .github/workflows/deploy.yml
+name: Deploy Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: \${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: \${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: \${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+\`\`\`
+
+## 🐳 Docker & Kubernetes
+
+\`\`\`dockerfile
+# Multi-stage Docker build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+EXPOSE 3000
+CMD ["node", "server.js"]
+\`\`\`
+
+## 📋 Infrastructure Checklist
+- [ ] Infrastructure as Code (Terraform/Pulumi)
+- [ ] Secrets management (Vault/AWS Secrets Manager)
+- [ ] Monitoring & alerting (Prometheus/Grafana)
+- [ ] Log aggregation (ELK/Loki)
+- [ ] Auto-scaling policies
+- [ ] Disaster recovery plan
+- [ ] Cost optimization review
+
+What DevOps challenge would you like to solve?`;
+}
+
+function generateUXResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# UX Design & Research Solution
+
+I'll help you create intuitive, user-centered designs! Here's my approach:
+
+## ✏️ Design Thinking Process
+
+### 1. Empathize — User Research
+- **Interviews**: 1-on-1 sessions with 5-8 target users
+- **Surveys**: Quantitative validation with 100+ respondents
+- **Analytics**: Behavioral data analysis (heatmaps, session recordings)
+- **Personas**: Build empathy maps and user personas
+
+### 2. Define — Problem Framing
+\`\`\`
+How might we help [persona] achieve [goal]
+while dealing with [constraint]?
+\`\`\`
+
+### 3. Ideate — Solution Exploration
+- Crazy 8s exercise for rapid concept generation
+- "How Might We" statements for divergent thinking
+- Prioritize ideas using Impact vs. Effort matrix
+
+### 4. Prototype — Low to High Fidelity
+- **Sketches** → Paper prototypes (5 min per concept)
+- **Wireframes** → Low-fi in Figma (layout & hierarchy)
+- **Interactive** → Clickable prototype (flow validation)
+- **Visual** → High-fi with design system tokens
+
+### 5. Test — Validate with Users
+- Moderated usability testing (5 users find 85% of issues)
+- A/B testing for data-driven design decisions
+- Accessibility audit (WCAG 2.1 AA compliance)
+
+## 🎨 Design System Tokens
+\`\`\`css
+:root {
+  /* Spacing Scale */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+  --space-4: 16px; --space-6: 24px; --space-8: 32px;
+
+  /* Typography */
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem;
+  --text-base: 1rem;   --text-lg: 1.125rem;
+}
+\`\`\`
+
+What UX challenge would you like to work on?`;
+}
+
+function generateContentResponse(content: string, analysis: ReturnType<typeof analyzeInput>): string {
+  return `# Content Strategy & Design Solution
+
+I'll help you create clear, user-friendly content! Here's my approach:
+
+## 📝 Content Design Framework
+
+### Voice & Tone Guidelines
+- **Clear**: Simple language, no jargon (8th grade reading level)
+- **Concise**: Every word earns its place
+- **Helpful**: Anticipate user questions
+- **Human**: Write like you speak, not like a robot
+
+### UX Writing Principles
+
+\`\`\`
+❌ "Error 404: Resource not found"
+✅ "We couldn't find that page. Try searching or go to the homepage."
+
+❌ "Submit the form to proceed"
+✅ "Continue" or "Save changes"
+
+❌ "Your session has been terminated due to inactivity"
+✅ "You've been signed out for security. Sign in again to continue."
+\`\`\`
+
+### Content Architecture
+
+1. **Information Hierarchy**
+   - Page title → Key message → Supporting details → Related content
+   - One idea per paragraph (3-5 sentences max)
+   - Front-load important information (inverted pyramid)
+
+2. **Navigation & Wayfinding**
+   - Clear labels (not clever ones)
+   - Breadcrumbs for deep hierarchies
+   - Consistent terminology across all pages
+
+3. **Microcopy Guide**
+   - Buttons: Action verbs (Save, Delete, Continue)
+   - Errors: Explain what happened + how to fix it
+   - Empty states: Guide users to their first action
+   - Success: Confirm what happened + next steps
+
+## 📋 Content Audit Template
+
+| Page | Purpose | Reading Level | Word Count | Action Needed |
+|------|---------|--------------|------------|---------------|
+| Home | Convert visitors | 8th grade | <300 | Simplify hero copy |
+| Pricing | Enable decision | 6th grade | <500 | Add comparison table |
+| Docs | Enable self-service | 10th grade | Varies | Add code examples |
+
+What content challenge would you like to tackle?`;
 }

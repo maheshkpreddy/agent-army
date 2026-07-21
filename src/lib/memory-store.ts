@@ -12,6 +12,7 @@ interface Agent {
   status: string;
   capabilities: string;
   systemPrompt: string;
+  industry: string[];
   tasksCompleted: number;
   createdAt: string;
   updatedAt: string;
@@ -85,6 +86,7 @@ const DEFAULT_AGENTS: Agent[] = [
     status: 'idle',
     capabilities: 'code-generation,code-review,debugging,refactoring,architecture,deployment,api-design,database-ops',
     systemPrompt: 'You are DevAgent, a senior full-stack developer with 15+ years of experience across all major languages and frameworks. You write clean, performant, well-documented code.',
+    industry: ['Technology & Software', 'Telecommunications', 'Finance & Banking'],
     tasksCompleted: 0,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -100,6 +102,7 @@ const DEFAULT_AGENTS: Agent[] = [
     status: 'idle',
     capabilities: 'unit-testing,integration-testing,e2e-testing,performance-testing,regression-analysis,test-automation,quality-assurance,boundary-testing',
     systemPrompt: 'You are TestAgent, a QA engineer specializing in comprehensive test coverage. You write tests that catch real bugs, not just inflate coverage numbers.',
+    industry: ['Technology & Software', 'Healthcare & Life Sciences', 'Finance & Banking', 'Retail & E-Commerce'],
     tasksCompleted: 0,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -115,6 +118,7 @@ const DEFAULT_AGENTS: Agent[] = [
     status: 'idle',
     capabilities: 'requirements-gathering,process-mapping,stakeholder-management,spec-writing,workflow-analysis,gap-analysis,impact-assessment,user-stories,acceptance-criteria',
     systemPrompt: 'You are BAAgent, a senior business analyst with deep experience bridging business and technology. You ask the right questions to uncover real requirements.',
+    industry: ['Technology & Software', 'Healthcare & Life Sciences', 'Finance & Banking', 'Retail & E-Commerce', 'Manufacturing & Supply Chain', 'Education & Training'],
     tasksCompleted: 0,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -130,6 +134,7 @@ const DEFAULT_AGENTS: Agent[] = [
     status: 'idle',
     capabilities: 'lead-qualification,pipeline-management,proposal-writing,deal-strategy,crm-ops,sales-forecasting,competitive-analysis,objection-handling,closing-strategy',
     systemPrompt: 'You are SalesAgent, a top-performing sales strategist and operator. You understand that great sales is about solving customer problems, not pushing products.',
+    industry: ['Retail & E-Commerce', 'Finance & Banking', 'Technology & Software', 'Manufacturing & Supply Chain'],
     tasksCompleted: 0,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -145,6 +150,7 @@ const DEFAULT_AGENTS: Agent[] = [
     status: 'idle',
     capabilities: 'project-delivery,deployment-management,configuration,change-management,rollout-strategy,migration,go-live-planning,rollback-planning,environment-setup',
     systemPrompt: 'You are ImplAgent, an implementation specialist who ensures smooth project delivery. You plan for success but prepare for failure with rollback strategies.',
+    industry: ['Technology & Software', 'Manufacturing & Supply Chain', 'Telecommunications', 'Energy & Utilities'],
     tasksCompleted: 0,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -160,6 +166,7 @@ const DEFAULT_AGENTS: Agent[] = [
     status: 'idle',
     capabilities: 'statistical-analysis,data-visualization,etl-pipelines,business-intelligence,predictive-modeling,data-cleaning,report-generation,trend-analysis,anomaly-detection',
     systemPrompt: 'You are DataAgent, a senior data analyst and scientist. You turn raw data into actionable insights. You create visualizations that tell clear stories.',
+    industry: ['Technology & Software', 'Healthcare & Life Sciences', 'Finance & Banking', 'Retail & E-Commerce', 'Manufacturing & Supply Chain', 'Education & Training'],
     tasksCompleted: 0,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -175,6 +182,7 @@ const DEFAULT_AGENTS: Agent[] = [
     status: 'idle',
     capabilities: 'infrastructure-management,monitoring,incident-response,devops,security-ops,cloud-management,backup-recovery,performance-tuning,capacity-planning',
     systemPrompt: 'You are SysAdminAgent, a veteran system administrator with deep expertise in cloud infrastructure, DevOps, and security. You automate everything that can be automated.',
+    industry: ['Technology & Software', 'Telecommunications', 'Energy & Utilities', 'Finance & Banking'],
     tasksCompleted: 0,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -190,6 +198,7 @@ const DEFAULT_AGENTS: Agent[] = [
     status: 'idle',
     capabilities: 'ticket-resolution,escalation-management,knowledge-base,customer-satisfaction,sla-management,triage,root-cause-analysis,training-materials,process-improvement',
     systemPrompt: 'You are SupportAgent, a customer support specialist who genuinely cares about solving problems. You respond quickly, communicate clearly, and follow up thoroughly.',
+    industry: ['Technology & Software', 'Healthcare & Life Sciences', 'Retail & E-Commerce', 'Telecommunications', 'Education & Training'],
     tasksCompleted: 0,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

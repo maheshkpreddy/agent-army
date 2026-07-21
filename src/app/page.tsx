@@ -11,7 +11,9 @@ import {
   Download, ExternalLink, ChevronDown, ChevronUp,
   PanelRightClose, PanelRightOpen, Search, Plus,
   FileText, ClipboardCheck, Menu, ArrowLeft,
-  History, Archive, Trash2, ArchiveRestore, Users, Database
+  History, Archive, Trash2, ArchiveRestore, Users, Database,
+  Factory, Building2, Heart, GraduationCap, Wifi,
+  Flame, ShoppingBag, Filter, XCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -41,6 +43,7 @@ interface Agent {
   color: string;
   capabilities: string;
   systemPrompt: string | null;
+  industry: string[];
   status: string;
   tasksCompleted: number;
   tasks: Task[];
@@ -160,6 +163,20 @@ const STATUS_CONFIG: Record<string, { dotColor: string; label: string }> = {
   error: { dotColor: '#EF4444', label: 'Error' },
 };
 
+// Industry config
+const INDUSTRY_CONFIG: Record<string, { icon: React.ReactNode; color: string; bg: string; label: string }> = {
+  'Technology & Software': { icon: <Code2 className="w-3 h-3" />, color: '#0d9488', bg: '#0d948815', label: 'Technology' },
+  'Healthcare & Life Sciences': { icon: <Heart className="w-3 h-3" />, color: '#EC4899', bg: '#EC489915', label: 'Healthcare' },
+  'Finance & Banking': { icon: <BarChart2 className="w-3 h-3" />, color: '#F59E0B', bg: '#F59E0B15', label: 'Finance' },
+  'Retail & E-Commerce': { icon: <ShoppingBag className="w-3 h-3" />, color: '#EF4444', bg: '#EF444415', label: 'Retail' },
+  'Manufacturing & Supply Chain': { icon: <Factory className="w-3 h-3" />, color: '#06B6D4', bg: '#06B6D415', label: 'Manufacturing' },
+  'Education & Training': { icon: <GraduationCap className="w-3 h-3" />, color: '#8B5CF6', bg: '#8B5CF615', label: 'Education' },
+  'Telecommunications': { icon: <Wifi className="w-3 h-3" />, color: '#3B82F6', bg: '#3B82F615', label: 'Telecom' },
+  'Energy & Utilities': { icon: <Flame className="w-3 h-3" />, color: '#F97316', bg: '#F9731615', label: 'Energy' },
+  'Media & Entertainment': { icon: <Sparkles className="w-3 h-3" />, color: '#A21CAF', bg: '#A21CAF15', label: 'Media' },
+  'Legal & Compliance': { icon: <Shield className="w-3 h-3" />, color: '#64748B', bg: '#64748B15', label: 'Legal' },
+};
+
 // Memoized Agent List Item
 const AgentListItem = memo(function AgentListItem({
   agent, isSelected, onClick,
@@ -178,7 +195,22 @@ const AgentListItem = memo(function AgentListItem({
           <p className="text-xs font-medium text-white truncate">{agent.name}</p>
           <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: STATUS_CONFIG[agent.status]?.dotColor || '#10B981' }} />
         </div>
-        <p className="text-[10px] text-slate-600 truncate">{typeConf?.label || agent.type}</p>
+        <div className="flex items-center gap-1 mt-0.5">
+          <p className="text-[10px] text-slate-600 truncate">{typeConf?.label || agent.type}</p>
+          {agent.industry && agent.industry.slice(0, 2).map((ind) => {
+            const conf = INDUSTRY_CONFIG[ind];
+            return (
+              <span key={ind} className="inline-flex items-center gap-0.5 text-[7px] px-1 py-0 rounded-full"
+                style={{ background: conf?.bg, color: conf?.color }}>
+                {conf?.icon}
+                <span>{conf?.label || ind.split(' & ')[0]}</span>
+              </span>
+            );
+          })}
+          {agent.industry && agent.industry.length > 2 && (
+            <span className="text-[7px] text-slate-600">+{agent.industry.length - 2}</span>
+          )}
+        </div>
       </div>
       {agent._count?.tasks > 0 && (
         <Badge className="bg-white/[0.06] text-slate-400 border-0 text-[9px] px-1.5 py-0 h-4">{agent._count.tasks}</Badge>
@@ -227,6 +259,8 @@ export default function MARQAIAgentTRIBE() {
   const [taskLoading, setTaskLoading] = useState(false);
   const [user, setUser] = useState<UserInfo | null>(null);
   const [userLoading, setUserLoading] = useState(true);
+  const [selectedIndustry, setSelectedIndustry] = useState('');
+  const [industryFilterOpen, setIndustryFilterOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -522,10 +556,29 @@ export default function MARQAIAgentTRIBE() {
   }, [user, agents]);
 
   const filteredAgents = useMemo(() => {
-    if (!searchQuery) return accessibleAgents;
-    const q = searchQuery.toLowerCase();
-    return accessibleAgents.filter(a => a.name.toLowerCase().includes(q) || a.type.toLowerCase().includes(q));
-  }, [accessibleAgents, searchQuery]);
+    let result = accessibleAgents;
+    // Filter by industry
+    if (selectedIndustry) {
+      result = result.filter(a => a.industry && a.industry.includes(selectedIndustry));
+    }
+    // Filter by search
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(a => a.name.toLowerCase().includes(q) || a.type.toLowerCase().includes(q));
+    }
+    return result;
+  }, [accessibleAgents, searchQuery, selectedIndustry]);
+
+  // Get unique industries from accessible agents
+  const availableIndustries = useMemo(() => {
+    const industries = new Set<string>();
+    accessibleAgents.forEach(a => {
+      if (a.industry) {
+        a.industry.forEach(ind => industries.add(ind));
+      }
+    });
+    return Array.from(industries).sort();
+  }, [accessibleAgents]);
 
   const permissions = useMemo(() => user ? ROLE_PERMISSIONS[user.role] : null, [user]);
   const agentTasks = useMemo(() => tasks.filter(t => selectedAgent && (t as any).agentId === selectedAgent.id), [tasks, selectedAgent]);
@@ -597,26 +650,120 @@ export default function MARQAIAgentTRIBE() {
           </div>
         )}
 
+        {/* Industry Filter */}
+        {sidebarOpen && (
+          <div className="px-3 py-2 border-b border-white/[0.06]">
+            <button
+              onClick={() => setIndustryFilterOpen(!industryFilterOpen)}
+              className="w-full flex items-center justify-between text-[10px] font-semibold text-slate-600 uppercase tracking-wider"
+            >
+              <span className="flex items-center gap-1.5">
+                <Filter className="w-3 h-3" />
+                Industry Filter
+              </span>
+              {selectedIndustry && (
+                <span
+                  onClick={(e) => { e.stopPropagation(); setSelectedIndustry(''); }}
+                  className="text-[9px] normal-case text-red-400 hover:text-red-300 flex items-center gap-0.5"
+                >
+                  <XCircle className="w-3 h-3" /> Clear
+                </span>
+              )}
+              {industryFilterOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            </button>
+            {industryFilterOpen && (
+              <div className="mt-2 flex flex-wrap gap-1">
+                {availableIndustries.map((ind) => {
+                  const conf = INDUSTRY_CONFIG[ind];
+                  const count = accessibleAgents.filter(a => a.industry?.includes(ind)).length;
+                  const isActive = selectedIndustry === ind;
+                  return (
+                    <button
+                      key={ind}
+                      onClick={() => setSelectedIndustry(isActive ? '' : ind)}
+                      className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-1 rounded-md transition-colors ${
+                        isActive
+                          ? 'text-white'
+                          : 'text-slate-500 hover:text-slate-300'
+                      }`}
+                      style={{
+                        background: isActive ? (conf?.color || '#0d9488') + '25' : 'rgba(255,255,255,0.03)',
+                        border: `1px solid ${isActive ? (conf?.color || '#0d9488') + '40' : 'rgba(255,255,255,0.06)'}`,
+                      }}
+                    >
+                      <span style={{ color: conf?.color || '#64748B' }}>{conf?.icon}</span>
+                      <span>{conf?.label || ind.split(' & ')[0]}</span>
+                      <span className="text-[8px] opacity-60">({count})</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {selectedIndustry && !industryFilterOpen && (
+              <div className="mt-1.5 flex items-center gap-1">
+                <span
+                  className="inline-flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded-md"
+                  style={{ background: (INDUSTRY_CONFIG[selectedIndustry]?.color || '#0d9488') + '15', color: INDUSTRY_CONFIG[selectedIndustry]?.color || '#0d9488' }}
+                >
+                  {INDUSTRY_CONFIG[selectedIndustry]?.icon}
+                  <span className="ml-0.5">{INDUSTRY_CONFIG[selectedIndustry]?.label}</span>
+                  <span className="ml-0.5 opacity-60">({filteredAgents.length})</span>
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Agent List */}
         <div className="flex-1 overflow-y-auto py-2 px-1.5 space-y-0.5">
           {sidebarOpen ? (
             <>
-              <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-2 mb-1.5">Agents</p>
-              {filteredAgents.map((agent) => (
-                <AgentListItem key={agent.id} agent={agent} isSelected={selectedAgent?.id === agent.id}
-                  onClick={() => handleSelectAgent(agent)} />
-              ))}
+              <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-2 mb-1.5">
+                Agents {selectedIndustry ? `(${filteredAgents.length})` : ''}
+              </p>
+              {filteredAgents.length === 0 && selectedIndustry ? (
+                <div className="px-2 py-4 text-center">
+                  <p className="text-[10px] text-slate-600">No agents for this industry</p>
+                  <button
+                    onClick={() => setSelectedIndustry('')}
+                    className="text-[10px] text-teal-400 hover:text-teal-300 mt-1"
+                  >
+                    Clear filter
+                  </button>
+                </div>
+              ) : (
+                filteredAgents.map((agent) => (
+                  <AgentListItem key={agent.id} agent={agent} isSelected={selectedAgent?.id === agent.id}
+                    onClick={() => handleSelectAgent(agent)} />
+                ))
+              )}
             </>
           ) : (
-            filteredAgents.map((agent) => (
-              <button key={agent.id} onClick={() => handleSelectAgent(agent)}
-                className={`w-full flex items-center justify-center p-2 rounded-lg transition-colors duration-150 ${selectedAgent?.id === agent.id ? 'bg-teal-500/10' : 'hover:bg-white/[0.03]'}`}
-                title={agent.name}>
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm" style={{ background: TYPE_CONFIG[agent.type]?.bg }}>
-                  {agent.avatar}
+            <>
+              {/* Collapsed sidebar: industry filter quick button */}
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className={`w-full flex items-center justify-center p-2 rounded-lg transition-colors duration-150 mb-1 ${
+                  selectedIndustry ? 'bg-teal-500/10 border border-teal-500/20' : 'hover:bg-white/[0.03]'
+                }`}
+                title={selectedIndustry || 'Filter by Industry'}
+              >
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ background: selectedIndustry ? (INDUSTRY_CONFIG[selectedIndustry]?.bg || 'rgba(255,255,255,0.04)') : 'rgba(255,255,255,0.04)' }}>
+                  <Filter className="w-4 h-4" style={{ color: selectedIndustry ? (INDUSTRY_CONFIG[selectedIndustry]?.color || '#64748B') : '#64748B' }} />
                 </div>
               </button>
-            ))
+              <div className="border-b border-white/[0.06] mx-2 mb-1" />
+              {filteredAgents.map((agent) => (
+                <button key={agent.id} onClick={() => handleSelectAgent(agent)}
+                  className={`w-full flex items-center justify-center p-2 rounded-lg transition-colors duration-150 ${selectedAgent?.id === agent.id ? 'bg-teal-500/10' : 'hover:bg-white/[0.03]'}`}
+                  title={agent.name}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm" style={{ background: TYPE_CONFIG[agent.type]?.bg }}>
+                    {agent.avatar}
+                  </div>
+                </button>
+              ))}
+            </>
           )}
         </div>
 
@@ -665,6 +812,23 @@ export default function MARQAIAgentTRIBE() {
                     </Badge>
                   </div>
                   <p className="text-[10px] text-slate-500 truncate max-w-xs">{selectedAgent.description}</p>
+                  {selectedAgent.industry && selectedAgent.industry.length > 0 && (
+                    <div className="flex items-center gap-1 mt-1 flex-wrap">
+                      {selectedAgent.industry.map((ind) => {
+                        const conf = INDUSTRY_CONFIG[ind];
+                        return (
+                          <span
+                            key={ind}
+                            className="inline-flex items-center gap-0.5 text-[8px] px-1.5 py-0.5 rounded-full"
+                            style={{ background: conf?.bg, color: conf?.color }}
+                          >
+                            {conf?.icon}
+                            <span className="ml-0.5">{conf?.label || ind.split(' & ')[0]}</span>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-1 shrink-0">

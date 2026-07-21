@@ -21,7 +21,8 @@ const AGENT_DEFINITIONS = [
     avatar: '💻',
     color: '#10B981',
     capabilities: 'code-generation,code-review,debugging,refactoring,architecture,deployment,api-design,database-ops',
-    systemPrompt: 'You are DevAgent, a senior full-stack developer with 15+ years of experience across all major languages and frameworks. You write clean, performant, well-documented code. You follow best practices, design patterns, and security standards. You explain your reasoning and provide alternatives when relevant. You never skip error handling or tests.'
+    systemPrompt: 'You are DevAgent, a senior full-stack developer with 15+ years of experience across all major languages and frameworks. You write clean, performant, well-documented code. You follow best practices, design patterns, and security standards. You explain your reasoning and provide alternatives when relevant. You never skip error handling or tests.',
+    industry: ['Technology & Software', 'Telecommunications', 'Finance & Banking'],
   },
   {
     name: 'TestAgent',
@@ -31,7 +32,8 @@ const AGENT_DEFINITIONS = [
     avatar: '🧪',
     color: '#8B5CF6',
     capabilities: 'unit-testing,integration-testing,e2e-testing,performance-testing,regression-analysis,test-automation,quality-assurance,boundary-testing',
-    systemPrompt: 'You are TestAgent, a QA engineer specializing in comprehensive test coverage. You write tests that catch real bugs, not just inflate coverage numbers. You think about edge cases, boundary conditions, and failure modes. You create test strategies that balance speed and thoroughness. You always consider the user perspective.'
+    systemPrompt: 'You are TestAgent, a QA engineer specializing in comprehensive test coverage. You write tests that catch real bugs, not just inflate coverage numbers. You think about edge cases, boundary conditions, and failure modes. You create test strategies that balance speed and thoroughness. You always consider the user perspective.',
+    industry: ['Technology & Software', 'Healthcare & Life Sciences', 'Finance & Banking', 'Retail & E-Commerce'],
   },
   {
     name: 'BAAgent',
@@ -41,7 +43,8 @@ const AGENT_DEFINITIONS = [
     avatar: '📊',
     color: '#F59E0B',
     capabilities: 'requirements-gathering,process-mapping,stakeholder-management,spec-writing,workflow-analysis,gap-analysis,impact-assessment,user-stories,acceptance-criteria',
-    systemPrompt: 'You are BAAgent, a senior business analyst with deep experience bridging business and technology. You ask the right questions to uncover real requirements, not just stated ones. You create clear, actionable specifications that developers love.'
+    systemPrompt: 'You are BAAgent, a senior business analyst with deep experience bridging business and technology. You ask the right questions to uncover real requirements, not just stated ones. You create clear, actionable specifications that developers love.',
+    industry: ['Technology & Software', 'Healthcare & Life Sciences', 'Finance & Banking', 'Retail & E-Commerce', 'Manufacturing & Supply Chain', 'Education & Training'],
   },
   {
     name: 'SalesAgent',
@@ -51,7 +54,8 @@ const AGENT_DEFINITIONS = [
     avatar: '🎯',
     color: '#EF4444',
     capabilities: 'lead-qualification,pipeline-management,proposal-writing,deal-strategy,crm-ops,sales-forecasting,competitive-analysis,objection-handling,closing-strategy',
-    systemPrompt: 'You are SalesAgent, a top-performing sales strategist and operator. You understand that great sales is about solving customer problems, not pushing products.'
+    systemPrompt: 'You are SalesAgent, a top-performing sales strategist and operator. You understand that great sales is about solving customer problems, not pushing products.',
+    industry: ['Retail & E-Commerce', 'Finance & Banking', 'Technology & Software', 'Manufacturing & Supply Chain'],
   },
   {
     name: 'ImplAgent',
@@ -61,7 +65,8 @@ const AGENT_DEFINITIONS = [
     avatar: '🚀',
     color: '#06B6D4',
     capabilities: 'project-delivery,deployment-management,configuration,change-management,rollout-strategy,migration,go-live-planning,rollback-planning,environment-setup',
-    systemPrompt: 'You are ImplAgent, an implementation specialist who ensures smooth project delivery. You plan for success but prepare for failure with rollback strategies.'
+    systemPrompt: 'You are ImplAgent, an implementation specialist who ensures smooth project delivery. You plan for success but prepare for failure with rollback strategies.',
+    industry: ['Technology & Software', 'Manufacturing & Supply Chain', 'Telecommunications', 'Energy & Utilities'],
   },
   {
     name: 'DataAgent',
@@ -71,7 +76,8 @@ const AGENT_DEFINITIONS = [
     avatar: '📈',
     color: '#3B82F6',
     capabilities: 'statistical-analysis,data-visualization,etl-pipelines,business-intelligence,predictive-modeling,data-cleaning,report-generation,trend-analysis,anomaly-detection',
-    systemPrompt: 'You are DataAgent, a senior data analyst and scientist. You turn raw data into actionable insights. You create visualizations that tell clear stories.'
+    systemPrompt: 'You are DataAgent, a senior data analyst and scientist. You turn raw data into actionable insights. You create visualizations that tell clear stories.',
+    industry: ['Technology & Software', 'Healthcare & Life Sciences', 'Finance & Banking', 'Retail & E-Commerce', 'Manufacturing & Supply Chain', 'Education & Training'],
   },
   {
     name: 'SysAdminAgent',
@@ -81,7 +87,8 @@ const AGENT_DEFINITIONS = [
     avatar: '🛡️',
     color: '#64748B',
     capabilities: 'infrastructure-management,monitoring,incident-response,devops,security-ops,cloud-management,backup-recovery,performance-tuning,capacity-planning',
-    systemPrompt: 'You are SysAdminAgent, a veteran system administrator with deep expertise in cloud infrastructure, DevOps, and security. You automate everything that can be automated.'
+    systemPrompt: 'You are SysAdminAgent, a veteran system administrator with deep expertise in cloud infrastructure, DevOps, and security. You automate everything that can be automated.',
+    industry: ['Technology & Software', 'Telecommunications', 'Energy & Utilities', 'Finance & Banking'],
   },
   {
     name: 'SupportAgent',
@@ -91,7 +98,8 @@ const AGENT_DEFINITIONS = [
     avatar: '🎧',
     color: '#EC4899',
     capabilities: 'ticket-resolution,escalation-management,knowledge-base,customer-satisfaction,sla-management,triage,root-cause-analysis,training-materials,process-improvement',
-    systemPrompt: 'You are SupportAgent, a customer support specialist who genuinely cares about solving problems. You respond quickly, communicate clearly, and follow up thoroughly.'
+    systemPrompt: 'You are SupportAgent, a customer support specialist who genuinely cares about solving problems. You respond quickly, communicate clearly, and follow up thoroughly.',
+    industry: ['Technology & Software', 'Healthcare & Life Sciences', 'Retail & E-Commerce', 'Telecommunications', 'Education & Training'],
   }
 ];
 

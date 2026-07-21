@@ -443,10 +443,24 @@ export default function MARQAIAgentTRIBE() {
     abortControllerRef.current = controller;
 
     try {
+      // Send chat history from client to API (fixes Vercel serverless statelessness)
+      // Only send the last 20 messages to keep payload manageable
+      const priorMessages = chatMessages
+        .filter(m => !m.isStreaming && !m.id.startsWith('temp-') && !m.id.startsWith('stream-'))
+        .slice(-20)
+        .map(m => ({ role: m.role, content: m.content }));
+
       const res = await fetch('/api/agents/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agentId: selectedAgent.id, content: msg, stream: true, conversationId: convId, userId: user.id }),
+        body: JSON.stringify({
+          agentId: selectedAgent.id,
+          content: msg,
+          stream: true,
+          conversationId: convId,
+          userId: user.id,
+          history: priorMessages,
+        }),
         signal: controller.signal,
       });
       if (!res.ok) throw new Error('Chat request failed');
